@@ -1508,6 +1508,7 @@
                 aiSubtotal: document.getElementById("aiRoomSubtotal")?.textContent?.trim() || "$0",
                 aiBuffered: document.getElementById("aiRoomBuffered")?.textContent?.trim() || "$0",
                 aiRoomsAnalyzed: document.getElementById("aiRoomsAnalyzed")?.textContent?.trim() || "0",
+                hasAiRoomAnalysis: analyzedRooms.length > 0,
                 assumptions: summarizeSelectedOptions(),
                 breakdownRows: getBreakdownRows(),
                 reasons: Array.from(document.querySelectorAll("#reasonList li")).map((item) => item.textContent?.trim() || "").filter(Boolean),
@@ -1548,6 +1549,17 @@
                     </tr>
                 `).join("")
                 : `<tr><td>No breakdown available</td><td class="align-right">$0</td></tr>`;
+
+            const aiRoomSummaryRows = report.rooms.length > 0
+                ? report.rooms.map((room) => `
+                    <tr>
+                        <td>${escapeHtml(room.name)}</td>
+                        <td class="align-center">${escapeHtml(String(room.images.length))}</td>
+                        <td class="align-center">${escapeHtml(String(room.components.length))}</td>
+                        <td class="align-right">${escapeHtml(formatMoney(room.total || 0))}</td>
+                    </tr>
+                `).join("")
+                : `<tr><td colspan="4">No AI room analysis has been included in this report.</td></tr>`;
 
             const roomSections = report.rooms.length > 0
                 ? report.rooms.map((room) => {
@@ -1949,6 +1961,29 @@
                 ${reasonsMarkup}
             </section>
 
+            ${report.hasAiRoomAnalysis ? `
+                <section class="report-block">
+                    <div class="section-row">
+                        <h2>AI room analysis included</h2>
+                        <span class="section-note">${escapeHtml(report.aiRoomsAnalyzed)} room${report.aiRoomsAnalyzed === "1" ? "" : "s"}</span>
+                    </div>
+                    <p>
+                        This report includes a separate AI room-analysis section with the customer-uploaded room photos and itemized attached-feature estimates for each analyzed room.
+                    </p>
+                    <table class="report-table">
+                        <thead>
+                            <tr>
+                                <th>Room</th>
+                                <th>Photos</th>
+                                <th>Items</th>
+                                <th>Estimate</th>
+                            </tr>
+                        </thead>
+                        <tbody>${aiRoomSummaryRows}</tbody>
+                    </table>
+                </section>
+            ` : ""}
+
             <p class="footer-note">
                 This estimate is intended as a customer-friendly starting point for condo interior coverage. Room estimates are based on visible attached features such as cabinets, flooring, trim, lighting, vanities, fixtures, and built-ins. Final insurance decisions should also consider condo bylaws, association master policy terms, and any upgrades not visible in the uploaded photos.
             </p>
@@ -2231,6 +2266,56 @@
                 if (report.photoEstimateDetail) {
                     y = addSectionTitle(doc, y + 0.08, "Photo scan note");
                     y = addWrappedText(doc, report.photoEstimateDetail, 0.65, y + 0.1, 7.05);
+                }
+
+                if (report.rooms.length > 0) {
+                    doc.addPage("letter");
+                    y = addPdfHeader(doc, doc.getNumberOfPages());
+                    addPdfFooter(doc);
+
+                    doc.setFillColor(239, 246, 255);
+                    doc.roundedRect(0.65, y, 7.2, 0.92, 0.12, 0.12, "F");
+                    doc.setFont("helvetica", "bold");
+                    doc.setFontSize(15);
+                    doc.setTextColor(16, 37, 66);
+                    doc.text("AI Room Analysis Appendix", 0.88, y + 0.28);
+                    doc.setFont("helvetica", "normal");
+                    doc.setFontSize(9.5);
+                    doc.setTextColor(71, 85, 105);
+                    const appendixLines = doc.splitTextToSize("This appendix includes each analyzed room, the uploaded room photos, and the itemized estimate for visible attached condo features.", 6.2);
+                    doc.text(appendixLines, 0.88, y + 0.5);
+                    doc.setFont("helvetica", "bold");
+                    doc.setFontSize(19);
+                    doc.setTextColor(29, 78, 216);
+                    doc.text(report.aiBuffered || report.photoEstimate, 7.6, y + 0.38, { align: "right" });
+                    doc.setFont("helvetica", "normal");
+                    doc.setFontSize(8.8);
+                    doc.setTextColor(71, 85, 105);
+                    doc.text(`${report.aiRoomsAnalyzed} room${report.aiRoomsAnalyzed === "1" ? "" : "s"} analyzed`, 7.6, y + 0.62, { align: "right" });
+                    y += 1.18;
+
+                    doc.autoTable({
+                        startY: y,
+                        margin: { left: 0.65, right: 0.65 },
+                        theme: "grid",
+                        styles: {
+                            fontSize: 9,
+                            cellPadding: 0.11,
+                            lineColor: [226, 232, 240]
+                        },
+                        headStyles: {
+                            fillColor: [16, 37, 66],
+                            textColor: [255, 255, 255],
+                            fontStyle: "bold"
+                        },
+                        head: [["Room", "Photos", "Items", "Estimate"]],
+                        body: report.rooms.map((room) => ([
+                            room.name,
+                            String(room.images.length),
+                            String(room.components.length),
+                            formatMoney(room.total || 0)
+                        ]))
+                    });
                 }
 
                 for (const room of report.rooms) {
