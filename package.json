@@ -1,0 +1,16 @@
+{
+  "name": "condo-coverage-calculator",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cloudflare Pages app for estimating condo interior coverage with manual inputs and AI room photo analysis.",
+  "scripts": {
+    "dev": "wrangler pages dev public",
+    "deploy": "wrangler pages deploy public --project-name condo-coverage-calculator"
+  },
+  "dependencies": {
+    "@google/genai": "^1.32.0"
+  },
+  "devDependencies": {
+    "wrangler": "^4.11.1"
+  }
+}
