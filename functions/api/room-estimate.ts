@@ -1,4 +1,4 @@
-import { GoogleGenAI } from "@google/genai";
+import JSON5 from "json5";
 
 const corsHeaders = {
   "Content-Type": "application/json",
@@ -74,6 +74,15 @@ function extractJsonBlock(rawText: string) {
   return blockMatch ? blockMatch[1] : trimmed;
 }
 
+function parseModelJson(rawText: string) {
+  const candidate = extractJsonBlock(rawText);
+  try {
+    return JSON.parse(candidate);
+  } catch {
+    return JSON5.parse(candidate);
+  }
+}
+
 export async function onRequestOptions() {
   return new Response(null, { headers: corsHeaders });
 }
@@ -90,22 +99,23 @@ export async function onRequestPost(context: any) {
       });
     }
 
-    const apiKey = env.GEMINI_API_KEY || env.API_KEY;
+    const apiKey = env.OPENAI_API_KEY;
     if (!apiKey) {
-      return new Response(JSON.stringify({ error: "GEMINI_API_KEY is not set for this project." }), {
+      return new Response(JSON.stringify({ error: "OPENAI_API_KEY is not set for this project." }), {
         status: 500,
         headers: corsHeaders,
       });
     }
 
-    const ai = new GoogleGenAI({ apiKey });
+    const model = env.OPENAI_MODEL || "gpt-4.1-mini";
     const imageParts = images
       .map(normalizeImagePayload)
       .filter((image) => image.data)
       .map((image) => ({
-        inlineData: {
-          mimeType: image.mimeType,
-          data: image.data,
+        type: "image_url",
+        image_url: {
+          url: `data:${image.mimeType};base64,${image.data}`,
+          detail: "high",
         },
       }));
 
@@ -116,7 +126,7 @@ export async function onRequestPost(context: any) {
       });
     }
 
-    const prompt = `You are a Senior Condo Interior Rebuild Estimator for an insurance agency.
+    const prompt = `You are a senior condo interior rebuild estimator for an insurance agency.
 
 MISSION:
 Analyze the provided image(s) of the "${roomName || "condo room"}" in a condo unit and estimate only the permanently installed interior property that a unit owner may need to insure under an HO-6 or condo unit-owners policy.
@@ -141,7 +151,7 @@ RULES:
 5. Return only fixtures and permanently attached features that belong in condo interior coverage.
 
 OUTPUT:
-Return ONLY a valid JSON object inside a markdown code block using this schema:
+Return ONLY a strict RFC 8259 JSON object using this schema. Every property name must use double quotes:
 {
   "roomSummary": "string",
   "components": [
@@ -156,18 +166,36 @@ Return ONLY a valid JSON object inside a markdown code block using this schema:
   ]
 }`;
 
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: {
-        parts: [...imageParts, { text: prompt }],
+    const openAiResponse = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
       },
-      config: {
-        tools: [{ googleSearch: {} }],
-      },
+      body: JSON.stringify({
+        model,
+        response_format: { type: "json_object" },
+        max_tokens: 1800,
+        messages: [
+          {
+            role: "user",
+            content: [
+              { type: "text", text: prompt },
+              ...imageParts,
+            ],
+          },
+        ],
+      }),
     });
 
-    const rawText = response.text || "";
-    const payload = JSON.parse(extractJsonBlock(rawText));
+    if (!openAiResponse.ok) {
+      const detail = await openAiResponse.text();
+      throw new Error(`OpenAI request failed: ${detail}`);
+    }
+
+    const responsePayload = await openAiResponse.json();
+    const rawText = responsePayload?.choices?.[0]?.message?.content || "";
+    const payload = parseModelJson(rawText);
     const roomSummary = typeof payload.roomSummary === "string" ? payload.roomSummary : "";
     const components = sanitizeComponents(payload.components);
 
