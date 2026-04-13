@@ -1255,10 +1255,6 @@
             document.getElementById("condoCalculatorForm").reset();
             calculateCoverage();
         });
-        document.getElementById("printBtn").addEventListener("click", function() {
-            window.print();
-        });
-
         document.addEventListener("DOMContentLoaded", function() {
             const menuToggleBtn = document.getElementById("menu-toggle-btn");
             const navigationMenu = document.getElementById("navigation-menu");
@@ -1530,6 +1526,465 @@
                     }))
                 }))
             };
+        }
+
+        function buildPrintReportHtml(report) {
+            const reasonsMarkup = report.reasons.length > 0
+                ? `<ul class="bullet-list">${report.reasons.map((reason) => `<li>${escapeHtml(reason)}</li>`).join("")}</ul>`
+                : `<p class="muted-copy">No coverage notes available yet.</p>`;
+
+            const assumptionRows = report.assumptions.map(([label, value]) => `
+                <tr>
+                    <th>${escapeHtml(label)}</th>
+                    <td>${escapeHtml(value)}</td>
+                </tr>
+            `).join("");
+
+            const breakdownRows = report.breakdownRows.length > 0
+                ? report.breakdownRows.map(([label, value]) => `
+                    <tr>
+                        <td>${escapeHtml(label)}</td>
+                        <td class="align-right">${escapeHtml(value)}</td>
+                    </tr>
+                `).join("")
+                : `<tr><td>No breakdown available</td><td class="align-right">$0</td></tr>`;
+
+            const roomSections = report.rooms.length > 0
+                ? report.rooms.map((room) => {
+                    const imageMarkup = room.images.length > 0
+                        ? `<div class="photo-grid">
+                            ${room.images.map((image, index) => `
+                                <figure class="photo-card">
+                                    <img src="${image}" alt="${escapeHtml(room.name)} photo ${index + 1}">
+                                    <figcaption>Photo ${index + 1}</figcaption>
+                                </figure>
+                            `).join("")}
+                        </div>`
+                        : `<p class="muted-copy">No room photos were included in this report.</p>`;
+
+                    const itemRows = room.components.length > 0
+                        ? room.components.map((component) => `
+                            <tr>
+                                <td>${escapeHtml(component.name)}</td>
+                                <td>${escapeHtml(component.category || "")}</td>
+                                <td class="align-center">${escapeHtml(String(component.quantity || 1))}</td>
+                                <td class="align-right">${escapeHtml(formatMoney(component.estimatedValue || 0))}</td>
+                                <td>${escapeHtml(component.notes || component.valuationRationale || "")}</td>
+                            </tr>
+                        `).join("")
+                        : `<tr><td colspan="5">No itemized estimate was returned for this room.</td></tr>`;
+
+                    return `
+                        <section class="print-page room-page">
+                            <div class="letter-shell">
+                                <header class="report-header">
+                                    <div>
+                                        <p class="eyebrow">Bill Layne Insurance</p>
+                                        <h1>${escapeHtml(room.name)}</h1>
+                                        <p class="subhead">AI room estimate for visible permanently attached condo features</p>
+                                    </div>
+                                    <div class="header-total">
+                                        <span>Room estimate</span>
+                                        <strong>${escapeHtml(formatMoney(room.total || 0))}</strong>
+                                    </div>
+                                </header>
+
+                                <section class="report-block compact-block">
+                                    <h2>Room summary</h2>
+                                    <p>${escapeHtml(room.summary || "AI reviewed the visible walls-in features in this room.")}</p>
+                                </section>
+
+                                <section class="report-block">
+                                    <div class="section-row">
+                                        <h2>Uploaded room photos</h2>
+                                        <span class="section-note">${room.images.length} photo${room.images.length === 1 ? "" : "s"}</span>
+                                    </div>
+                                    ${imageMarkup}
+                                </section>
+
+                                <section class="report-block">
+                                    <div class="section-row">
+                                        <h2>Itemized room estimate</h2>
+                                        <span class="section-note">${escapeHtml(formatMoney(room.total || 0))}</span>
+                                    </div>
+                                    <table class="report-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Item</th>
+                                                <th>Category</th>
+                                                <th>Qty</th>
+                                                <th>Estimate</th>
+                                                <th>Notes</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>${itemRows}</tbody>
+                                    </table>
+                                </section>
+                            </div>
+                        </section>
+                    `;
+                }).join("")
+                : "";
+
+            return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Condo Interior Coverage Report</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        @page {
+            size: letter;
+            margin: 0.45in;
+        }
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #e2e8f0;
+            color: #0f172a;
+        }
+        .print-page {
+            width: 8.5in;
+            min-height: 11in;
+            margin: 0 auto 18px;
+            page-break-after: always;
+        }
+        .print-page:last-child {
+            page-break-after: auto;
+        }
+        .letter-shell {
+            width: 100%;
+            min-height: 10.1in;
+            background: #ffffff;
+            padding: 0.42in 0.44in 0.38in;
+            position: relative;
+        }
+        .letter-shell::before {
+            content: "";
+            position: absolute;
+            inset: 0 0 auto 0;
+            height: 0.26in;
+            background: linear-gradient(90deg, #102542 0%, #1d4ed8 100%);
+        }
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 18px;
+            padding-top: 0.1in;
+            margin-bottom: 0.22in;
+        }
+        .eyebrow {
+            margin: 0 0 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-size: 9px;
+            font-weight: 700;
+            color: #2563eb;
+        }
+        h1 {
+            margin: 0;
+            font-size: 27px;
+            line-height: 1.05;
+            color: #102542;
+        }
+        .subhead {
+            margin: 8px 0 0;
+            font-size: 12px;
+            color: #475569;
+        }
+        .header-total {
+            min-width: 2.15in;
+            padding: 14px 16px;
+            border-radius: 16px;
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            text-align: right;
+        }
+        .header-total span {
+            display: block;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #1d4ed8;
+        }
+        .header-total strong {
+            display: block;
+            margin-top: 8px;
+            font-size: 24px;
+            color: #102542;
+        }
+        .overview-grid {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 14px;
+            margin-bottom: 0.18in;
+        }
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 12px;
+        }
+        .metric-card {
+            border: 1px solid #dbeafe;
+            background: #f8fbff;
+            border-radius: 14px;
+            padding: 12px 14px;
+        }
+        .metric-card span {
+            display: block;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #2563eb;
+        }
+        .metric-card strong {
+            display: block;
+            margin-top: 8px;
+            font-size: 20px;
+            color: #102542;
+        }
+        .metric-card small {
+            display: block;
+            margin-top: 6px;
+            font-size: 11px;
+            line-height: 1.4;
+            color: #64748b;
+        }
+        .report-block {
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            background: #fff;
+            padding: 14px 16px;
+            margin-bottom: 12px;
+            break-inside: avoid;
+        }
+        .compact-block {
+            margin-bottom: 10px;
+        }
+        .report-block h2 {
+            margin: 0 0 8px;
+            font-size: 15px;
+            color: #102542;
+        }
+        .report-block p {
+            margin: 0;
+            font-size: 11.5px;
+            line-height: 1.55;
+            color: #334155;
+        }
+        .report-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 8px;
+            font-size: 10px;
+        }
+        .report-table th,
+        .report-table td {
+            border: 1px solid #e2e8f0;
+            padding: 7px 8px;
+            vertical-align: top;
+        }
+        .report-table th {
+            background: #102542;
+            color: #fff;
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            text-align: left;
+        }
+        .align-right {
+            text-align: right;
+        }
+        .align-center {
+            text-align: center;
+        }
+        .bullet-list {
+            margin: 0;
+            padding-left: 18px;
+        }
+        .bullet-list li {
+            margin: 0 0 6px;
+            font-size: 11px;
+            line-height: 1.5;
+            color: #334155;
+        }
+        .muted-copy {
+            color: #64748b;
+        }
+        .section-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 12px;
+        }
+        .section-note {
+            font-size: 10px;
+            font-weight: 700;
+            color: #2563eb;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .photo-card {
+            margin: 0;
+            border: 1px solid #cbd5e1;
+            border-radius: 14px;
+            overflow: hidden;
+            background: #f8fafc;
+            break-inside: avoid;
+        }
+        .photo-card img {
+            display: block;
+            width: 100%;
+            height: 2.35in;
+            object-fit: cover;
+            background: #e2e8f0;
+        }
+        .photo-card figcaption {
+            padding: 8px 10px;
+            font-size: 10px;
+            color: #475569;
+        }
+        .footer-note {
+            margin-top: 12px;
+            font-size: 9.5px;
+            line-height: 1.45;
+            color: #64748b;
+        }
+        .room-page .report-block:last-child {
+            margin-bottom: 0;
+        }
+        @media print {
+            body {
+                background: #fff;
+            }
+            .print-page {
+                margin: 0;
+            }
+            .letter-shell {
+                min-height: auto;
+                padding-bottom: 0.28in;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="print-page">
+        <div class="letter-shell">
+            <header class="report-header">
+                <div>
+                    <p class="eyebrow">Bill Layne Insurance</p>
+                    <h1>Condo Interior Coverage Report</h1>
+                    <p class="subhead">Prepared ${escapeHtml(report.generatedAt)} for customer review</p>
+                </div>
+                <div class="header-total">
+                    <span>Suggested Coverage A</span>
+                    <strong>${escapeHtml(report.recommendedCoverage)}</strong>
+                </div>
+            </header>
+
+            <section class="overview-grid">
+                <div class="report-block">
+                    <h2>Coverage summary</h2>
+                    <p>${escapeHtml(report.narrative || "This report summarizes the current condo interior coverage estimate and the analyzed room-level fixtures and finish estimates.")}</p>
+                    <div class="metric-grid">
+                        <div class="metric-card">
+                            <span>Estimated range</span>
+                            <strong>${escapeHtml(report.coverageRange)}</strong>
+                            <small>Working range for walls-in condo interior rebuild coverage.</small>
+                        </div>
+                        <div class="metric-card">
+                            <span>Interior rebuild estimate</span>
+                            <strong>${escapeHtml(report.rebuildEstimate)}</strong>
+                            <small>Manual estimate based on condo size, finishes, baths, and fixtures.</small>
+                        </div>
+                        <div class="metric-card">
+                            <span>Buffer amount</span>
+                            <strong>${escapeHtml(report.bufferAmount)}</strong>
+                            <small>Allowance for debris, contractor overhead, code drift, and price changes.</small>
+                        </div>
+                        <div class="metric-card">
+                            <span>AI room estimate</span>
+                            <strong>${escapeHtml(report.aiBuffered || report.photoEstimate)}</strong>
+                            <small>${escapeHtml(report.photoEstimateDetail || "Buffered room-photo estimate using analyzed visible attached features.")}</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="report-block">
+                    <h2>Selected assumptions</h2>
+                    <table class="report-table">
+                        <tbody>${assumptionRows}</tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="report-block">
+                <h2>Coverage breakdown</h2>
+                <table class="report-table">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Estimated amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>${breakdownRows}</tbody>
+                </table>
+            </section>
+
+            <section class="report-block">
+                <h2>Why this amount makes sense</h2>
+                ${reasonsMarkup}
+            </section>
+
+            <p class="footer-note">
+                This estimate is intended as a customer-friendly starting point for condo interior coverage. Room estimates are based on visible attached features such as cabinets, flooring, trim, lighting, vanities, fixtures, and built-ins. Final insurance decisions should also consider condo bylaws, association master policy terms, and any upgrades not visible in the uploaded photos.
+            </p>
+        </div>
+    </section>
+    ${roomSections}
+</body>
+</html>`;
+        }
+
+        async function printStyledEstimate() {
+            const report = collectPdfReportData();
+            const printWindow = window.open("", "_blank", "width=1100,height=900");
+            if (!printWindow) {
+                window.alert("Please allow pop-ups so the styled estimate can open for printing.");
+                return;
+            }
+
+            const reportHtml = buildPrintReportHtml(report);
+            printWindow.document.open();
+            printWindow.document.write(reportHtml);
+            printWindow.document.close();
+
+            const waitForImages = () => Promise.all(
+                Array.from(printWindow.document.images).map((image) => {
+                    if (image.complete) return Promise.resolve();
+                    return new Promise((resolve) => {
+                        image.onload = () => resolve();
+                        image.onerror = () => resolve();
+                    });
+                })
+            );
+
+            await waitForImages();
+            printWindow.focus();
+            printWindow.print();
         }
 
         function addPdfHeader(doc, pageNumber) {
@@ -2052,6 +2507,7 @@
 
         document.getElementById("analyzeAllRoomsBtn")?.addEventListener("click", analyzeAllReadyRooms);
         document.getElementById("downloadPdfBtn")?.addEventListener("click", buildCondoPdfReport);
+        document.getElementById("printBtn")?.addEventListener("click", printStyledEstimate);
         renderRooms();
         updateAiSummary();
     </script>
