@@ -42,6 +42,8 @@
     <link rel="stylesheet" href="css/mobile-dock.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -1047,6 +1049,7 @@
                     <div class="calc-actions">
                         <a class="pill-button pill-button--primary" href="tel:3368351993"><i class="fas fa-phone"></i>Call Bill Layne Insurance</a>
                         <button type="button" id="printBtn" class="pill-button pill-button--ghost"><i class="fas fa-print"></i>Print this estimate</button>
+                        <button type="button" id="downloadPdfBtn" class="pill-button pill-button--ghost"><i class="fas fa-file-pdf"></i>Download PDF report</button>
                     </div>
                 </div>
 
@@ -1330,6 +1333,16 @@
             return aiCurrency.format(Math.max(0, Math.round(value || 0)));
         }
 
+        function formatDateStamp(date = new Date()) {
+            return date.toLocaleString("en-US", {
+                month: "long",
+                day: "numeric",
+                year: "numeric",
+                hour: "numeric",
+                minute: "2-digit"
+            });
+        }
+
         function escapeHtml(value) {
             return String(value ?? "")
                 .replace(/&/g, "&amp;")
@@ -1451,6 +1464,387 @@
             const contingency = subtotal * 0.12;
             const policyGap = subtotal * (masterPolicy === "barewalls" ? 0.1 : masterPolicy === "unknown" ? 0.07 : 0.04);
             return Math.ceil((subtotal + contingency + policyGap) / 5000) * 5000;
+        }
+
+        function summarizeSelectedOptions() {
+            const squareFeet = document.getElementById("squareFeet")?.value || "";
+            const finish = document.getElementById("finishLevel");
+            const kitchen = document.getElementById("kitchenQuality");
+            const baths = document.getElementById("bathCount");
+            const flooring = document.getElementById("flooringType");
+            const custom = document.getElementById("customFeatures");
+            const appliances = document.getElementById("ownerAppliances");
+            const masterPolicy = document.getElementById("masterPolicy");
+
+            return [
+                ["Condo size", squareFeet ? `${squareFeet} sq ft` : "Not entered"],
+                ["Finish level", finish?.selectedOptions?.[0]?.textContent?.trim() || "Not selected"],
+                ["Kitchen quality", kitchen?.selectedOptions?.[0]?.textContent?.trim() || "Not selected"],
+                ["Bathrooms", baths?.selectedOptions?.[0]?.textContent?.trim() || "Not selected"],
+                ["Flooring", flooring?.selectedOptions?.[0]?.textContent?.trim() || "Not selected"],
+                ["Custom features", custom?.selectedOptions?.[0]?.textContent?.trim() || "Not selected"],
+                ["Owner appliances", appliances?.selectedOptions?.[0]?.textContent?.trim() || "Not selected"],
+                ["Association master policy", masterPolicy?.selectedOptions?.[0]?.textContent?.trim() || "Not selected"]
+            ];
+        }
+
+        function getBreakdownRows() {
+            return Array.from(document.querySelectorAll("#breakdownRows .breakdown-row")).map((row) => {
+                const spans = row.querySelectorAll("span, strong");
+                return [
+                    spans[0]?.textContent?.trim() || "",
+                    spans[1]?.textContent?.trim() || ""
+                ];
+            }).filter((entry) => entry[0] && entry[1]);
+        }
+
+        function collectPdfReportData() {
+            const analyzedRooms = roomState.rooms.filter((room) => room.status === "done");
+            return {
+                generatedAt: formatDateStamp(),
+                recommendedCoverage: document.getElementById("recommendedCoverage")?.textContent?.trim() || "$0",
+                coverageRange: document.getElementById("coverageRange")?.textContent?.trim() || "",
+                narrative: document.getElementById("coverageNarrative")?.textContent?.trim() || "",
+                rebuildEstimate: document.getElementById("rebuildEstimate")?.textContent?.trim() || "$0",
+                bufferAmount: document.getElementById("bufferAmount")?.textContent?.trim() || "$0",
+                photoEstimate: document.getElementById("photoEstimate")?.textContent?.trim() || "$0",
+                photoEstimateDetail: document.getElementById("photoEstimateDetail")?.textContent?.trim() || "",
+                aiSubtotal: document.getElementById("aiRoomSubtotal")?.textContent?.trim() || "$0",
+                aiBuffered: document.getElementById("aiRoomBuffered")?.textContent?.trim() || "$0",
+                aiRoomsAnalyzed: document.getElementById("aiRoomsAnalyzed")?.textContent?.trim() || "0",
+                assumptions: summarizeSelectedOptions(),
+                breakdownRows: getBreakdownRows(),
+                reasons: Array.from(document.querySelectorAll("#reasonList li")).map((item) => item.textContent?.trim() || "").filter(Boolean),
+                rooms: analyzedRooms.map((room) => ({
+                    name: room.name,
+                    summary: room.summary,
+                    total: room.total,
+                    images: room.images.map((image) => `data:${image.mimeType || "image/jpeg"};base64,${image.data}`),
+                    components: room.components.map((component) => ({
+                        name: component.name,
+                        category: component.category,
+                        estimatedValue: component.estimatedValue,
+                        quantity: component.quantity,
+                        notes: component.notes,
+                        valuationRationale: component.valuationRationale
+                    }))
+                }))
+            };
+        }
+
+        function addPdfHeader(doc, pageNumber) {
+            const pageWidth = doc.internal.pageSize.getWidth();
+            doc.setFillColor(16, 37, 66);
+            doc.rect(0, 0, pageWidth, 0.65, "F");
+            doc.setTextColor(16, 37, 66);
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(22);
+            doc.text("Bill Layne Insurance", 0.65, 1.05);
+            doc.setFontSize(13);
+            doc.text("Condo Interior Coverage Report", 0.65, 1.35);
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(9.5);
+            doc.setTextColor(71, 85, 105);
+            doc.text("336-835-1993  |  billlayneinsurance.com", 0.65, 1.62);
+            doc.text(`Page ${pageNumber}`, pageWidth - 0.65, 1.62, { align: "right" });
+            doc.setDrawColor(203, 213, 225);
+            doc.line(0.65, 1.82, pageWidth - 0.65, 1.82);
+            return 2.1;
+        }
+
+        function addPdfFooter(doc) {
+            const pageHeight = doc.internal.pageSize.getHeight();
+            const pageWidth = doc.internal.pageSize.getWidth();
+            doc.setDrawColor(226, 232, 240);
+            doc.line(0.65, pageHeight - 0.55, pageWidth - 0.65, pageHeight - 0.55);
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(8.5);
+            doc.setTextColor(100, 116, 139);
+            doc.text("Prepared for customer review. AI room estimates are approximate and should be reviewed with condo bylaws and your agent.", 0.65, pageHeight - 0.28);
+        }
+
+        function ensurePdfPageSpace(doc, y, neededHeight) {
+            const pageHeight = doc.internal.pageSize.getHeight();
+            if (y + neededHeight <= pageHeight - 0.85) {
+                return y;
+            }
+            doc.addPage("letter");
+            const nextY = addPdfHeader(doc, doc.getNumberOfPages());
+            addPdfFooter(doc);
+            return nextY;
+        }
+
+        function addSectionTitle(doc, y, title, subtitle = "") {
+            y = ensurePdfPageSpace(doc, y, subtitle ? 0.9 : 0.55);
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(13);
+            doc.setTextColor(16, 37, 66);
+            doc.text(title, 0.65, y);
+            y += 0.22;
+            if (subtitle) {
+                doc.setFont("helvetica", "normal");
+                doc.setFontSize(9.5);
+                doc.setTextColor(71, 85, 105);
+                const lines = doc.splitTextToSize(subtitle, 7.2);
+                doc.text(lines, 0.65, y + 0.12);
+                y += lines.length * 0.18 + 0.16;
+            } else {
+                y += 0.1;
+            }
+            return y;
+        }
+
+        function addWrappedText(doc, text, x, y, width, fontSize = 10, lineGap = 0.18) {
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(fontSize);
+            doc.setTextColor(51, 65, 85);
+            const lines = doc.splitTextToSize(text || "", width);
+            doc.text(lines, x, y);
+            return y + lines.length * lineGap;
+        }
+
+        async function addRoomImagesToPdf(doc, room, startY) {
+            if (!room.images.length) {
+                return startY;
+            }
+
+            let y = addSectionTitle(doc, startY, `${room.name} photos`, "Uploaded room photos included in this estimate.");
+            const pageWidth = doc.internal.pageSize.getWidth();
+            const margin = 0.65;
+            const gap = 0.18;
+            const cellWidth = (pageWidth - (margin * 2) - gap) / 2;
+            const imageHeight = 2.15;
+
+            for (let index = 0; index < room.images.length; index += 2) {
+                y = ensurePdfPageSpace(doc, y, imageHeight + 0.45);
+                const batch = room.images.slice(index, index + 2);
+                for (let column = 0; column < batch.length; column += 1) {
+                    const x = margin + (column * (cellWidth + gap));
+                    doc.setDrawColor(203, 213, 225);
+                    doc.setFillColor(248, 250, 252);
+                    doc.roundedRect(x, y, cellWidth, imageHeight + 0.24, 0.08, 0.08, "FD");
+                    try {
+                        doc.addImage(batch[column], "JPEG", x + 0.08, y + 0.08, cellWidth - 0.16, imageHeight - 0.02);
+                    } catch {
+                        doc.setFont("helvetica", "normal");
+                        doc.setFontSize(9);
+                        doc.setTextColor(100, 116, 139);
+                        doc.text("Photo could not be embedded.", x + 0.12, y + 1.18);
+                    }
+                    doc.setFont("helvetica", "normal");
+                    doc.setFontSize(8.5);
+                    doc.setTextColor(71, 85, 105);
+                    doc.text(`Photo ${index + column + 1}`, x + 0.12, y + imageHeight + 0.16);
+                }
+                y += imageHeight + 0.42;
+            }
+
+            return y;
+        }
+
+        async function buildCondoPdfReport() {
+            const report = collectPdfReportData();
+            if (report.rooms.length === 0) {
+                window.alert("Analyze at least one room before creating the customer PDF report.");
+                return;
+            }
+
+            const pdfButton = document.getElementById("downloadPdfBtn");
+            const originalLabel = pdfButton?.innerHTML;
+            if (pdfButton) {
+                pdfButton.disabled = true;
+                pdfButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Building PDF...';
+            }
+
+            try {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF({
+                    orientation: "portrait",
+                    unit: "in",
+                    format: "letter"
+                });
+
+                let y = addPdfHeader(doc, 1);
+                addPdfFooter(doc);
+
+                doc.setFillColor(239, 246, 255);
+                doc.roundedRect(0.65, y, 7.2, 1.1, 0.12, 0.12, "F");
+                doc.setFont("helvetica", "bold");
+                doc.setFontSize(11);
+                doc.setTextColor(16, 37, 66);
+                doc.text("Recommended condo interior coverage", 0.88, y + 0.28);
+                doc.setFontSize(24);
+                doc.text(report.recommendedCoverage, 0.88, y + 0.72);
+                doc.setFont("helvetica", "normal");
+                doc.setFontSize(9.5);
+                doc.setTextColor(71, 85, 105);
+                doc.text(report.coverageRange, 4.72, y + 0.4);
+                doc.text(`Generated ${report.generatedAt}`, 4.72, y + 0.64);
+                y += 1.42;
+
+                y = addSectionTitle(doc, y, "Coverage summary", report.narrative);
+
+                doc.autoTable({
+                    startY: y,
+                    margin: { left: 0.65, right: 0.65 },
+                    theme: "grid",
+                    styles: {
+                        fontSize: 9,
+                        cellPadding: 0.12,
+                        textColor: [30, 41, 59],
+                        lineColor: [226, 232, 240]
+                    },
+                    headStyles: {
+                        fillColor: [16, 37, 66],
+                        textColor: [255, 255, 255],
+                        fontStyle: "bold"
+                    },
+                    bodyStyles: {
+                        fillColor: [255, 255, 255]
+                    },
+                    head: [["Metric", "Value"]],
+                    body: [
+                        ["Suggested Coverage A", report.recommendedCoverage],
+                        ["Estimated range", report.coverageRange],
+                        ["Interior rebuild estimate", report.rebuildEstimate],
+                        ["Buffer amount", report.bufferAmount],
+                        ["AI room scan subtotal", report.aiSubtotal],
+                        ["Buffered AI estimate", report.aiBuffered],
+                        ["Photo-based room scan", report.photoEstimate],
+                        ["Rooms analyzed", report.aiRoomsAnalyzed]
+                    ]
+                });
+                y = doc.lastAutoTable.finalY + 0.26;
+
+                doc.autoTable({
+                    startY: y,
+                    margin: { left: 0.65, right: 0.65 },
+                    theme: "grid",
+                    styles: {
+                        fontSize: 8.8,
+                        cellPadding: 0.1,
+                        lineColor: [226, 232, 240]
+                    },
+                    columnStyles: {
+                        0: { cellWidth: 2.4, fontStyle: "bold" },
+                        1: { cellWidth: 4.8 }
+                    },
+                    headStyles: {
+                        fillColor: [29, 78, 216],
+                        textColor: [255, 255, 255]
+                    },
+                    head: [["Input", "Selection"]],
+                    body: report.assumptions
+                });
+                y = doc.lastAutoTable.finalY + 0.24;
+
+                if (report.breakdownRows.length > 0) {
+                    y = addSectionTitle(doc, y, "Coverage breakdown");
+                    doc.autoTable({
+                        startY: y,
+                        margin: { left: 0.65, right: 0.65 },
+                        theme: "grid",
+                        styles: {
+                            fontSize: 8.8,
+                            cellPadding: 0.1,
+                            lineColor: [226, 232, 240]
+                        },
+                        headStyles: {
+                            fillColor: [15, 23, 42],
+                            textColor: [255, 255, 255]
+                        },
+                        head: [["Category", "Estimated amount"]],
+                        body: report.breakdownRows
+                    });
+                    y = doc.lastAutoTable.finalY + 0.24;
+                }
+
+                if (report.reasons.length > 0) {
+                    y = addSectionTitle(doc, y, "Why this amount makes sense");
+                    doc.setFont("helvetica", "normal");
+                    doc.setFontSize(9.5);
+                    doc.setTextColor(51, 65, 85);
+                    report.reasons.forEach((reason) => {
+                        y = ensurePdfPageSpace(doc, y, 0.34);
+                        doc.circle(0.8, y - 0.04, 0.03, "F");
+                        const lines = doc.splitTextToSize(reason, 6.8);
+                        doc.text(lines, 0.95, y);
+                        y += lines.length * 0.18 + 0.06;
+                    });
+                }
+
+                if (report.photoEstimateDetail) {
+                    y = addSectionTitle(doc, y + 0.08, "Photo scan note");
+                    y = addWrappedText(doc, report.photoEstimateDetail, 0.65, y + 0.1, 7.05);
+                }
+
+                for (const room of report.rooms) {
+                    doc.addPage("letter");
+                    y = addPdfHeader(doc, doc.getNumberOfPages());
+                    addPdfFooter(doc);
+
+                    doc.setFillColor(241, 245, 249);
+                    doc.roundedRect(0.65, y, 7.2, 0.72, 0.08, 0.08, "F");
+                    doc.setFont("helvetica", "bold");
+                    doc.setFontSize(16);
+                    doc.setTextColor(16, 37, 66);
+                    doc.text(room.name, 0.88, y + 0.28);
+                    doc.setFontSize(11);
+                    doc.text(formatMoney(room.total), 7.6, y + 0.28, { align: "right" });
+                    doc.setFont("helvetica", "normal");
+                    doc.setFontSize(9.2);
+                    doc.setTextColor(71, 85, 105);
+                    doc.text("AI itemized estimate for visible attached features", 0.88, y + 0.54);
+                    y += 0.95;
+
+                    y = addSectionTitle(doc, y, `${room.name} summary`);
+                    y = addWrappedText(doc, room.summary || "AI reviewed the visible walls-in features in this room.", 0.65, y + 0.1, 7.05);
+                    y += 0.16;
+
+                    y = await addRoomImagesToPdf(doc, room, y);
+
+                    y = addSectionTitle(doc, y, `${room.name} itemized estimate`, "Replacement-cost estimate for visible permanently attached features.");
+                    doc.autoTable({
+                        startY: y,
+                        margin: { left: 0.65, right: 0.65 },
+                        theme: "grid",
+                        styles: {
+                            fontSize: 8.2,
+                            cellPadding: 0.08,
+                            lineColor: [226, 232, 240],
+                            valign: "top"
+                        },
+                        headStyles: {
+                            fillColor: [16, 37, 66],
+                            textColor: [255, 255, 255],
+                            fontStyle: "bold"
+                        },
+                        columnStyles: {
+                            0: { cellWidth: 1.55 },
+                            1: { cellWidth: 0.55, halign: "center" },
+                            2: { cellWidth: 0.8, halign: "right" },
+                            3: { cellWidth: 1.2 },
+                            4: { cellWidth: 3.1 }
+                        },
+                        head: [["Item", "Qty", "Estimate", "Category", "Notes / rationale"]],
+                        body: room.components.map((component) => ([
+                            component.name,
+                            String(component.quantity || 1),
+                            formatMoney(component.estimatedValue || 0),
+                            component.category || "",
+                            component.notes || component.valuationRationale || ""
+                        ]))
+                    });
+                }
+
+                const timestamp = new Date().toISOString().slice(0, 10);
+                doc.save(`condo-coverage-report-${timestamp}.pdf`);
+            } finally {
+                if (pdfButton) {
+                    pdfButton.disabled = false;
+                    pdfButton.innerHTML = originalLabel || '<i class="fas fa-file-pdf"></i> Download PDF report';
+                }
+            }
         }
 
         function updateAiSummary() {
@@ -1657,6 +2051,7 @@
         });
 
         document.getElementById("analyzeAllRoomsBtn")?.addEventListener("click", analyzeAllReadyRooms);
+        document.getElementById("downloadPdfBtn")?.addEventListener("click", buildCondoPdfReport);
         renderRooms();
         updateAiSummary();
     </script>
