@@ -368,6 +368,13 @@
             grid-column: 1 / -1;
         }
 
+        .field-hint {
+            margin-top: 0.1rem;
+            font-size: 0.84rem;
+            line-height: 1.45;
+            color: #64748b;
+        }
+
         label {
             font-size: 0.95rem;
             font-weight: 700;
@@ -381,9 +388,11 @@
             border-radius: 16px;
             padding: 0.9rem 1rem;
             font: inherit;
+            font-size: 16px;
             color: var(--ink);
             background: rgba(255, 255, 255, 0.96);
             transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            -webkit-appearance: none;
         }
 
         input:focus,
@@ -414,6 +423,8 @@
             padding: 0.95rem 1.3rem;
             border-radius: 999px;
             font-weight: 700;
+            min-height: 52px;
+            text-align: center;
         }
 
         .pill-button--primary {
@@ -626,6 +637,8 @@
             cursor: pointer;
             background: white;
             border: 1px solid rgba(148, 163, 184, 0.35);
+            min-height: 52px;
+            text-align: center;
         }
 
         .upload-label--camera {
@@ -755,6 +768,131 @@
             .hero-title {
                 max-width: none;
             }
+
+            .section-shell {
+                padding: 0.65rem 0 2.4rem;
+            }
+
+            .hero-copy,
+            .hero-panel,
+            .calc-card,
+            .results-card,
+            .checklist-card,
+            .info-strip,
+            .ai-panel,
+            .room-card {
+                padding: 1.1rem;
+            }
+
+            .hero-subtitle,
+            .report-block p,
+            .text-slate-600,
+            .text-slate-700 {
+                line-height: 1.55;
+            }
+
+            .calc-actions,
+            .room-tools,
+            .upload-actions,
+            .hero-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .calc-actions > *,
+            .room-tools > *,
+            .upload-actions > *,
+            .hero-actions > * {
+                width: 100%;
+            }
+
+            .pill-button,
+            .cta-btn,
+            .upload-label {
+                width: 100%;
+                min-height: 54px;
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+
+            .room-card__top,
+            .section-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .room-status,
+            .section-note {
+                align-self: flex-start;
+            }
+
+            .result-amount {
+                font-size: clamp(2rem, 12vw, 3rem);
+            }
+
+            .range-chip {
+                width: 100%;
+                justify-content: center;
+                text-align: center;
+            }
+
+            .snapshot-card strong,
+            .ai-metric strong,
+            .room-summary strong {
+                font-size: 1.45rem;
+            }
+
+            .breakdown-row,
+            .component-row {
+                flex-direction: column;
+                gap: 0.35rem;
+            }
+
+            .thumb button {
+                width: 36px;
+                height: 36px;
+            }
+
+            .upload-zone {
+                padding: 0.9rem;
+            }
+
+            .checklist-card ul,
+            .results-card ul {
+                padding-left: 1rem;
+            }
+        }
+
+        @media (max-width: 540px) {
+            main {
+                padding-top: 72px;
+            }
+
+            .f-header .h-20 {
+                height: 72px;
+            }
+
+            .hero-title {
+                font-size: clamp(2rem, 10.5vw, 2.8rem);
+                line-height: 0.98;
+            }
+
+            .signal {
+                padding: 0.85rem;
+            }
+
+            .signal strong {
+                font-size: 1.2rem;
+            }
+
+            .ai-metrics {
+                gap: 0.75rem;
+            }
+
+            .mobile-dock + .menu-overlay,
+            .dock-spacer {
+                display: block;
+            }
         }
     </style>
 </head>
@@ -877,7 +1015,8 @@
                         <form id="condoCalculatorForm" class="form-grid mt-6">
                             <div class="field">
                                 <label for="squareFeet">Condo square footage</label>
-                                <input id="squareFeet" name="squareFeet" type="number" min="300" max="6000" step="10" value="1200" required>
+                                <input id="squareFeet" name="squareFeet" type="number" min="300" max="6000" step="10" value="1200" inputmode="numeric" required>
+                                <div class="field-hint">Bedrooms, halls, closets, and living areas are already covered through total square footage.</div>
                             </div>
                             <div class="field">
                                 <label for="finishLevel">Overall finish level</label>
@@ -910,11 +1049,11 @@
 
                             <div class="field">
                                 <label for="fullBaths">Number of full bathrooms</label>
-                                <input id="fullBaths" name="fullBaths" type="number" min="1" max="6" step="1" value="2" required>
+                                <input id="fullBaths" name="fullBaths" type="number" min="1" max="6" step="1" value="2" inputmode="numeric" required>
                             </div>
                             <div class="field">
                                 <label for="halfBaths">Number of half bathrooms</label>
-                                <input id="halfBaths" name="halfBaths" type="number" min="0" max="4" step="1" value="0" required>
+                                <input id="halfBaths" name="halfBaths" type="number" min="0" max="4" step="1" value="0" inputmode="numeric" required>
                             </div>
 
                             <div class="field">
@@ -938,11 +1077,11 @@
 
                             <div class="field">
                                 <label for="builtIns">Custom built-ins or entertainment walls</label>
-                                <input id="builtIns" name="builtIns" type="number" min="0" max="6" step="1" value="0">
+                                <input id="builtIns" name="builtIns" type="number" min="0" max="6" step="1" value="0" inputmode="numeric">
                             </div>
                             <div class="field">
                                 <label for="customClosets">Custom closet systems</label>
-                                <input id="customClosets" name="customClosets" type="number" min="0" max="6" step="1" value="1">
+                                <input id="customClosets" name="customClosets" type="number" min="0" max="6" step="1" value="1" inputmode="numeric">
                             </div>
 
                             <div class="field">
@@ -2450,11 +2589,11 @@
                             <div class="upload-actions">
                                 <label class="upload-label">
                                     <i class="fas fa-upload"></i> Upload photos
-                                    <input type="file" accept="image/*,.heic,.heif,image/heic,image/heif" multiple data-action="upload" data-room-id="${escapeHtml(room.id)}" hidden>
+                                    <input type="file" accept="image/*,.heic,.heif,image/heic,image/heif,image/heic-sequence,image/heif-sequence" multiple data-action="upload" data-room-id="${escapeHtml(room.id)}" hidden>
                                 </label>
                                 <label class="upload-label upload-label--camera">
                                     <i class="fas fa-camera"></i> Take photo
-                                    <input type="file" accept="image/*,.heic,.heif,image/heic,image/heif" capture="environment" data-action="upload" data-room-id="${escapeHtml(room.id)}" hidden>
+                                    <input type="file" accept="image/*,.heic,.heif,image/heic,image/heif,image/heic-sequence,image/heif-sequence" capture="environment" data-action="upload" data-room-id="${escapeHtml(room.id)}" hidden>
                                 </label>
                             </div>
                             ${room.images.length > 0 ? `<div class="thumb-grid">${thumbs}</div>` : ""}
