@@ -1062,6 +1062,42 @@
             margin-top: 0.2rem;
         }
 
+        .room-correction {
+            margin-top: 1rem;
+            border-radius: 18px;
+            border: 1px solid rgba(0, 118, 211, 0.16);
+            background: rgba(248, 250, 252, 0.96);
+            overflow: hidden;
+        }
+
+        .room-correction summary {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.8rem;
+            min-height: 52px;
+            padding: 0.9rem 1rem;
+            color: var(--navy);
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .room-correction summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .room-correction__body {
+            display: grid;
+            gap: 0.8rem;
+            padding: 0 1rem 1rem;
+        }
+
+        .room-correction__body p {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.45;
+        }
+
         .ai-empty {
             margin-top: 1rem;
             padding: 0.95rem 1rem;
@@ -1447,7 +1483,7 @@
                         <div id="sizeCheckStatus" class="manual-reset-status" role="status" aria-live="polite"></div>
 
                         <div class="disclaimer">
-                            This estimates attached inside-condo features, not your furniture, clothing, electronics, or jewelry. Those are reviewed under contents coverage.
+                            This estimates attached inside-condo features and includes typical replacement labor plus a rebuild cushion. It does not estimate your furniture, clothing, electronics, or jewelry.
                         </div>
                     </section>
 
@@ -1676,6 +1712,12 @@
 
         const sizeCheckRate = 115;
         const sizeCheckBufferRate = 0.18;
+        const flooringCorrectionOptions = {
+            carpet: { label: "Carpet", estimate: 4500, notes: "Customer corrected the main flooring to carpet." },
+            lvp: { label: "LVP / laminate", estimate: 7500, notes: "Customer corrected the main flooring to LVP or laminate." },
+            hardwood: { label: "Hardwood", estimate: 14000, notes: "Customer corrected the main flooring to hardwood." },
+            tile: { label: "Tile", estimate: 12000, notes: "Customer corrected the main flooring to tile." }
+        };
         let sizeCheckTimer = null;
         window.condoAiState = { subtotal: 0, bufferedEstimate: 0, analyzedRooms: 0 };
 
@@ -1718,6 +1760,37 @@
             const buffer = roundUpToNearest(base * sizeCheckBufferRate, 5000);
             return { base, buffer, total: roundUpToNearest(base + buffer, 5000) };
         }
+
+        function isFlooringComponent(component) {
+            return /floor|carpet|hardwood|wood|lvp|vinyl|laminate|tile/i.test(`${component.name || ""} ${component.category || ""}`);
+        }
+
+        function applyRoomCorrections(room) {
+            const baseComponents = (room.aiComponents || room.components || []).filter((component) => !component.customerCorrected);
+            const selectedFlooring = room.corrections?.flooring || "";
+            const correctedComponents = selectedFlooring && flooringCorrectionOptions[selectedFlooring]
+                ? baseComponents.filter((component) => !isFlooringComponent(component))
+                : [...baseComponents];
+
+            if (selectedFlooring && flooringCorrectionOptions[selectedFlooring]) {
+                const correction = flooringCorrectionOptions[selectedFlooring];
+                correctedComponents.push({
+                    name: `${correction.label} flooring`,
+                    category: "flooring",
+                    estimatedValue: correction.estimate,
+                    quantity: 1,
+                    notes: correction.notes,
+                    valuationRationale: "Customer correction after AI room scan.",
+                    customerCorrected: true
+                });
+            }
+
+            room.components = correctedComponents;
+            room.total = correctedComponents.reduce((sum, component) => sum + (Number(component.estimatedValue) || 0), 0);
+        }
+
+        window.flooringCorrectionOptions = flooringCorrectionOptions;
+        window.applyRoomCorrections = applyRoomCorrections;
 
         function buildReasons(squareFeet, sizeCheck, aiState, finalRecommendation) {
             const reasons = [];
@@ -1853,6 +1926,8 @@
                 ...room,
                 images: [],
                 components: [],
+                aiComponents: [],
+                corrections: { flooring: "" },
                 total: 0,
                 summary: "",
                 status: "idle",
@@ -1951,6 +2026,8 @@
                 tip: "Take one wide photo, then close-ups of any attached finishes, fixtures, flooring, cabinets, or built-ins.",
                 images: [],
                 components: [],
+                aiComponents: [],
+                corrections: { flooring: "" },
                 total: 0,
                 summary: "",
                 status: "idle",
@@ -2132,6 +2209,7 @@
                 aiSubtotal: document.getElementById("aiRoomSubtotal")?.textContent?.trim() || "$0",
                 aiBuffered: document.getElementById("aiRoomBuffered")?.textContent?.trim() || "$0",
                 aiRoomsAnalyzed: document.getElementById("aiRoomsAnalyzed")?.textContent?.trim() || "0",
+                estimateIncludes: "Includes attached condo features, typical replacement labor, debris cleanup, contractor overhead, price-change cushion, and association policy gap allowance. It is an estimate, not a guaranteed claim payment.",
                 hasAiRoomAnalysis: analyzedRooms.length > 0,
                 assumptions: summarizeSelectedOptions(),
                 breakdownRows: getBreakdownRows(),
@@ -2147,7 +2225,8 @@
                         estimatedValue: component.estimatedValue,
                         quantity: component.quantity,
                         notes: component.notes,
-                        valuationRationale: component.valuationRationale
+                        valuationRationale: component.valuationRationale,
+                        customerCorrected: !!component.customerCorrected
                     }))
                 }))
             };
@@ -2205,7 +2284,7 @@
                                 <td>${escapeHtml(component.category || "")}</td>
                                 <td class="align-center">${escapeHtml(String(component.quantity || 1))}</td>
                                 <td class="align-right">${escapeHtml(formatMoney(component.estimatedValue || 0))}</td>
-                                <td>${escapeHtml(component.notes || component.valuationRationale || "")}</td>
+                                <td>${component.customerCorrected ? "Customer correction. " : ""}${escapeHtml(component.notes || component.valuationRationale || "")}</td>
                             </tr>
                         `).join("")
                         : `<tr><td colspan="5">No itemized estimate was returned for this room.</td></tr>`;
@@ -2544,12 +2623,12 @@
                         <div class="metric-card">
                             <span>Interior rebuild estimate</span>
                             <strong>${escapeHtml(report.rebuildEstimate)}</strong>
-                            <small>Manual estimate based on condo size, finishes, baths, and fixtures.</small>
+                            <small>Starting estimate from analyzed photos or the optional square-footage check.</small>
                         </div>
                         <div class="metric-card">
                             <span>Buffer amount</span>
                             <strong>${escapeHtml(report.bufferAmount)}</strong>
-                            <small>Allowance for debris, contractor overhead, code drift, and price changes.</small>
+                            <small>Allowance for labor, debris cleanup, contractor overhead, code drift, and price changes.</small>
                         </div>
                         <div class="metric-card">
                             <span>AI room estimate</span>
@@ -2557,6 +2636,7 @@
                             <small>${escapeHtml(report.photoEstimateDetail || "Buffered room-photo estimate using analyzed visible attached features.")}</small>
                         </div>
                     </div>
+                    <p class="footer-note">${escapeHtml(report.estimateIncludes)}</p>
                 </div>
 
                 <div class="report-block">
@@ -2822,6 +2902,7 @@
                         ["Estimated range", report.coverageRange],
                         ["Interior rebuild estimate", report.rebuildEstimate],
                         ["Buffer amount", report.bufferAmount],
+                        ["Estimate includes", report.estimateIncludes],
                         ["AI room scan subtotal", report.aiSubtotal],
                         ["Buffered AI estimate", report.aiBuffered],
                         ["Photo-based room scan", report.photoEstimate],
@@ -2996,7 +3077,7 @@
                             String(component.quantity || 1),
                             formatMoney(component.estimatedValue || 0),
                             component.category || "",
-                            component.notes || component.valuationRationale || ""
+                            `${component.customerCorrected ? "Customer correction. " : ""}${component.notes || component.valuationRationale || ""}`
                         ]))
                     });
                 }
@@ -3067,7 +3148,7 @@
                         <div class="component-row">
                             <div>
                                 <strong>${escapeHtml(component.name)}</strong>
-                                <small>${escapeHtml(component.notes || component.valuationRationale)}</small>
+                                <small>${component.customerCorrected ? "Customer correction: " : ""}${escapeHtml(component.notes || component.valuationRationale)}</small>
                             </div>
                             <strong>${formatMoney(component.estimatedValue)}</strong>
                         </div>
@@ -3078,6 +3159,28 @@
                             ? "Tap Estimate this room when you are ready."
                             : "Add photos first. Start with one wide room photo, then add close-ups of important finishes."
                     }</div>`;
+                const selectedFlooring = room.corrections?.flooring || "";
+                const correctionMarkup = room.status === "done" && room.components.length > 0
+                    ? `<details class="room-correction">
+                        <summary>
+                            <span><i class="fas fa-pen-to-square"></i> Fix this room</span>
+                            <span class="help-cue">Optional</span>
+                        </summary>
+                        <div class="room-correction__body">
+                            <p>If the AI got the main flooring wrong, choose the correct type. Leave it alone if the result looks close enough.</p>
+                            <div class="field">
+                                <label for="flooringCorrection-${escapeHtml(room.id)}">Main flooring in this room</label>
+                                <select id="flooringCorrection-${escapeHtml(room.id)}" data-action="flooring-correction" data-room-id="${escapeHtml(room.id)}">
+                                    <option value="" ${selectedFlooring === "" ? "selected" : ""}>Use AI result</option>
+                                    <option value="carpet" ${selectedFlooring === "carpet" ? "selected" : ""}>Carpet</option>
+                                    <option value="lvp" ${selectedFlooring === "lvp" ? "selected" : ""}>LVP / laminate</option>
+                                    <option value="hardwood" ${selectedFlooring === "hardwood" ? "selected" : ""}>Hardwood</option>
+                                    <option value="tile" ${selectedFlooring === "tile" ? "selected" : ""}>Tile</option>
+                                </select>
+                            </div>
+                        </div>
+                    </details>`
+                    : "";
 
                 return `
                     <article class="room-card" data-room-id="${escapeHtml(room.id)}">
@@ -3124,6 +3227,7 @@
                         </div>
 
                         ${componentMarkup}
+                        ${correctionMarkup}
                     </article>
                 `;
             }).join("");
@@ -3136,7 +3240,14 @@
                     if (!room || !files || files.length === 0) return;
                     const payloads = await Promise.all(Array.from(files).map(fileToImagePayload));
                     room.images.push(...payloads);
-                    room.status = room.status === "done" ? "idle" : room.status;
+                    if (room.status === "done") {
+                        room.status = "idle";
+                        room.components = [];
+                        room.aiComponents = [];
+                        room.corrections = { flooring: "" };
+                        room.total = 0;
+                        room.summary = "";
+                    }
                     room.error = "";
                     renderRooms();
                     setAiActionMessage(`${room.name} has ${room.images.length} photo${room.images.length === 1 ? "" : "s"} ready. Tap Analyze ready rooms or estimate this room.`, "success", true);
@@ -3152,6 +3263,8 @@
                     if (room.images.length === 0 && room.status === "done") {
                         room.status = "idle";
                         room.components = [];
+                        room.aiComponents = [];
+                        room.corrections = { flooring: "" };
                         room.total = 0;
                         room.summary = "";
                     }
@@ -3167,6 +3280,8 @@
                     if (!room) return;
                     room.images = [];
                     room.components = [];
+                    room.aiComponents = [];
+                    room.corrections = { flooring: "" };
                     room.total = 0;
                     room.summary = "";
                     room.status = "idle";
@@ -3186,8 +3301,8 @@
                     renderRooms();
                     try {
                         const result = await analyzeCondoRoom(room.images, room.name);
-                        room.components = result.components;
-                        room.total = result.components.reduce((sum, component) => sum + component.estimatedValue, 0);
+                        room.aiComponents = result.components;
+                        window.applyRoomCorrections(room);
                         room.summary = result.roomSummary || "AI reviewed the visible walls-in features in this room.";
                         room.status = "done";
                     } catch (error) {
@@ -3197,6 +3312,25 @@
                     renderRooms();
                     updateAiSummary();
                     updateAnalyzeAllButton();
+                });
+            });
+
+            grid.querySelectorAll('select[data-action="flooring-correction"]').forEach((select) => {
+                select.addEventListener("change", () => {
+                    const room = roomState.rooms.find((entry) => entry.id === select.dataset.roomId);
+                    if (!room) return;
+                    room.corrections = { ...(room.corrections || {}), flooring: select.value };
+                    window.applyRoomCorrections(room);
+                    renderRooms();
+                    updateAiSummary();
+                    updateAnalyzeAllButton();
+                    const correction = window.flooringCorrectionOptions[select.value];
+                    setAiActionMessage(correction
+                        ? `${room.name} flooring corrected to ${correction.label}.`
+                        : `${room.name} is using the original AI flooring result.`,
+                        "success",
+                        true
+                    );
                 });
             });
 
@@ -3223,8 +3357,8 @@
                 renderRooms();
                 try {
                     const result = await analyzeCondoRoom(room.images, room.name);
-                    room.components = result.components;
-                    room.total = result.components.reduce((sum, component) => sum + component.estimatedValue, 0);
+                    room.aiComponents = result.components;
+                    window.applyRoomCorrections(room);
                     room.summary = result.roomSummary || "AI reviewed the visible walls-in features in this room.";
                     room.status = "done";
                 } catch (error) {
@@ -3244,7 +3378,7 @@
             if (failedRooms.length > 0) {
                 setAiActionMessage(`${failedRooms.length} room${failedRooms.length === 1 ? "" : "s"} could not be scanned. Open that room card and try Estimate this room again.`, "error");
             } else {
-                setAiActionMessage(`Finished scanning ${readyRooms.length} room${readyRooms.length === 1 ? "" : "s"}. Review the recommended amount below or fine tune it with the questions.`, "success", true);
+                setAiActionMessage(`Finished scanning ${readyRooms.length} room${readyRooms.length === 1 ? "" : "s"}. Review the recommended amount below or use Fix this room if something looks wrong.`, "success", true);
             }
         }
 
