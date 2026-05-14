@@ -277,6 +277,73 @@
             margin-bottom: 1.25rem;
         }
 
+        .estimate-workflow {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0.9rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .workflow-step {
+            display: flex;
+            gap: 0.8rem;
+            align-items: flex-start;
+            padding: 1rem;
+            border-radius: 22px;
+            background: rgba(255, 255, 255, 0.88);
+            border: 1px solid rgba(0, 118, 211, 0.14);
+            box-shadow: 0 14px 34px rgba(15, 23, 42, 0.06);
+        }
+
+        .workflow-step strong {
+            display: block;
+            color: var(--ink);
+            font-family: "Outfit", system-ui, sans-serif;
+            font-size: 1.1rem;
+        }
+
+        .workflow-step span {
+            display: block;
+            color: var(--muted);
+            line-height: 1.4;
+            margin-top: 0.15rem;
+        }
+
+        .workflow-number {
+            width: 38px;
+            height: 38px;
+            border-radius: 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex: 0 0 auto;
+            background: linear-gradient(135deg, var(--blue), var(--navy));
+            color: white;
+            font-weight: 900;
+        }
+
+        .estimate-flow {
+            display: flex;
+            flex-direction: column;
+        }
+
+        #ai-room-scan {
+            order: 1;
+            scroll-margin-top: 96px;
+        }
+
+        #manual-calculator {
+            scroll-margin-top: 96px;
+        }
+
+        .calc-layout {
+            order: 2;
+        }
+
+        .checklist-card {
+            order: 3;
+        }
+
         .eyebrow {
             display: inline-flex;
             align-items: center;
@@ -1059,6 +1126,7 @@
             .hero-grid,
             .calc-layout,
             .info-grid,
+            .estimate-workflow,
             .ai-overview,
             .visual-support-grid,
             .help-card-grid,
@@ -1255,13 +1323,13 @@
                 <div class="hero-grid">
                     <div class="hero-copy">
                         <span class="eyebrow"><i class="fas fa-building-shield"></i> Condo Interior Coverage Estimator</span>
-                        <h1 class="hero-title">Estimate the inside coverage your condo may need.</h1>
+                        <h1 class="hero-title">Start with photos. Get a condo coverage estimate.</h1>
                         <p class="hero-subtitle">
-                            A simple way to estimate cabinets, flooring, fixtures, appliances, and built-ins.
+                            Take room photos first. Then answer a few questions only if you want to fine tune the result.
                         </p>
                         <div class="hero-actions">
-                            <a class="cta-btn cta-btn--primary" href="#calculator"><i class="fas fa-calculator"></i>Start the estimate</a>
-                            <a class="cta-btn cta-btn--secondary" href="tel:3368351993"><i class="fas fa-phone"></i>Talk to an agent</a>
+                            <a class="cta-btn cta-btn--primary" href="#ai-room-scan"><i class="fas fa-camera"></i>Start with photos</a>
+                            <a class="cta-btn cta-btn--secondary" href="#manual-calculator"><i class="fas fa-sliders"></i>Answer questions instead</a>
                         </div>
                     </div>
 
@@ -1316,13 +1384,36 @@
         </section>
 
         <section id="calculator" class="section-shell">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 estimate-flow">
+                <div class="estimate-workflow" aria-label="Estimate steps">
+                    <div class="workflow-step">
+                        <span class="workflow-number">1</span>
+                        <div>
+                            <strong>Take photos</strong>
+                            <span>Let AI look for attached condo features.</span>
+                        </div>
+                    </div>
+                    <div class="workflow-step">
+                        <span class="workflow-number">2</span>
+                        <div>
+                            <strong>Fine tune</strong>
+                            <span>Answer questions only if you want to adjust the estimate.</span>
+                        </div>
+                    </div>
+                    <div class="workflow-step">
+                        <span class="workflow-number">3</span>
+                        <div>
+                            <strong>Review amount</strong>
+                            <span>Use the stronger result as a starting point.</span>
+                        </div>
+                    </div>
+                </div>
                 <div class="calc-layout">
-                    <section class="calc-card" aria-labelledby="calculator-title">
-                        <p class="section-label">Calculator</p>
-                        <h2 id="calculator-title" class="text-4xl mt-2">Condo inside-coverage calculator</h2>
+                    <section id="manual-calculator" class="calc-card" aria-labelledby="calculator-title">
+                        <p class="section-label">Step 2 - Optional fine tune</p>
+                        <h2 id="calculator-title" class="text-4xl mt-2">Answer a few questions</h2>
                         <p class="text-slate-600 mt-3 max-w-3xl">
-                            Answer a few simple questions. We estimate the inside of the condo and add a cushion for cleanup, labor, and price changes.
+                            Prefer not to use photos, or want to adjust the result? Use these simple inputs as a backup estimate.
                         </p>
 
                         <form id="condoCalculatorForm" class="form-grid mt-6">
@@ -1426,7 +1517,7 @@
                         </form>
 
                         <div class="calc-actions">
-                            <button type="button" id="calculateBtn" class="pill-button pill-button--primary"><i class="fas fa-sparkles"></i>Calculate recommended coverage</button>
+                            <button type="button" id="calculateBtn" class="pill-button pill-button--primary"><i class="fas fa-sparkles"></i>Fine tune estimate</button>
                             <button type="button" id="resetBtn" class="pill-button pill-button--ghost"><i class="fas fa-rotate-left"></i>Reset inputs</button>
                         </div>
 
@@ -1436,7 +1527,7 @@
                     </section>
 
                     <aside class="results-card" aria-live="polite">
-                        <p class="section-label">Recommended amount</p>
+                        <p class="section-label">Step 3 - Recommended amount</p>
                         <h2 class="text-3xl mt-2">Suggested inside-condo coverage</h2>
                         <div class="result-amount" id="recommendedCoverage">$0</div>
                         <div class="range-chip" id="coverageRange"><i class="fas fa-arrows-left-right"></i>Estimated range: $0 - $0</div>
@@ -1556,11 +1647,11 @@
                     </div>
                 </div>
 
-                <div class="ai-estimator-shell">
+                <div id="ai-room-scan" class="ai-estimator-shell">
                     <div class="ai-overview">
                         <section class="ai-panel">
-                            <p class="section-label">AI Room Scan</p>
-                            <h2 class="text-3xl mt-2">Upload room photos to estimate attached condo features.</h2>
+                            <p class="section-label">Step 1 - Photo scan</p>
+                            <h2 class="text-3xl mt-2">Take photos of each room</h2>
                             <figure class="coverage-photo coverage-photo--scan mt-4">
                                 <img src="assets/condo-room-scan.webp" alt="Homeowner using a phone camera to photograph attached condo kitchen finishes for documentation" width="1100" height="825" loading="lazy" decoding="async">
                             </figure>
@@ -1574,6 +1665,7 @@
                             <div class="calc-actions">
                                 <button type="button" id="addCustomRoomBtn" class="pill-button pill-button--ghost"><i class="fas fa-plus"></i>Add custom room</button>
                                 <button type="button" id="analyzeAllRoomsBtn" class="pill-button pill-button--primary"><i class="fas fa-camera-retro"></i><span id="analyzeAllRoomsLabel">Analyze ready rooms</span></button>
+                                <a class="pill-button pill-button--ghost" href="#manual-calculator"><i class="fas fa-sliders"></i>Fine tune with questions</a>
                             </div>
                             <div id="aiActionMessage" class="ai-action-message" data-tone="info" role="status" aria-live="polite"></div>
                         </section>
@@ -1617,8 +1709,8 @@
         <a href="tel:3368351993" class="dock-btn dock-call">
             <i class="fas fa-phone-alt"></i> Call
         </a>
-        <a href="#calculator" class="dock-btn dock-quote">
-            <i class="fas fa-calculator"></i> Calculate Coverage
+        <a href="#ai-room-scan" class="dock-btn dock-quote">
+            <i class="fas fa-camera"></i> Start Photo Scan
         </a>
     </div>
 
@@ -3227,7 +3319,7 @@
             if (failedRooms.length > 0) {
                 setAiActionMessage(`${failedRooms.length} room${failedRooms.length === 1 ? "" : "s"} could not be scanned. Open that room card and try Estimate this room again.`, "error");
             } else {
-                setAiActionMessage(`Finished scanning ${readyRooms.length} room${readyRooms.length === 1 ? "" : "s"}. The photo estimate is now included above.`, "success", true);
+                setAiActionMessage(`Finished scanning ${readyRooms.length} room${readyRooms.length === 1 ? "" : "s"}. Review the recommended amount below or fine tune it with the questions.`, "success", true);
             }
         }
 
