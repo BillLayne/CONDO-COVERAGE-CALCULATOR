@@ -1385,13 +1385,18 @@
 
         @media (max-width: 720px) {
             .f-header {
-                top: 0.55rem;
+                position: fixed;
+                top: max(0.55rem, env(safe-area-inset-top));
+                left: 0;
+                right: 0;
+                z-index: 1200;
             }
 
             .header-shell {
                 min-height: 62px;
                 border-radius: 22px;
                 padding: 0.45rem 0.55rem 0.45rem 0.75rem;
+                box-shadow: 0 14px 36px rgba(15, 23, 42, 0.16);
             }
 
             .header-back-link {
@@ -1406,6 +1411,7 @@
             }
 
             .header-phone {
+                display: inline-flex;
                 width: 42px;
                 min-height: 42px;
                 justify-content: center;
@@ -1654,7 +1660,7 @@
                     <span>Bill Layne Insurance</span>
                 </a>
                 <div class="header-actions" aria-label="Contact actions">
-                    <a class="header-phone" href="tel:3368351993"><i class="fas fa-phone"></i><span>(336) 835-1993</span></a>
+                    <a class="header-phone" href="tel:3368351993" aria-label="Call Bill Layne Insurance"><i class="fas fa-phone"></i><span>(336) 835-1993</span></a>
                     <a class="header-quote" href="https://www.billlayneinsurance.com/">Get a Quote</a>
                 </div>
             </div>
