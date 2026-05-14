@@ -136,6 +136,10 @@
             text-decoration: none;
         }
 
+        .header-back-link i {
+            color: var(--blue);
+        }
+
         main {
             padding-top: 80px;
         }
@@ -198,10 +202,79 @@
 
         .hero-panel {
             border-radius: 32px;
-            padding: 1.5rem;
+            padding: 0;
             background: linear-gradient(165deg, rgba(0, 63, 135, 0.98), rgba(0, 118, 211, 0.94));
             color: white;
             overflow: hidden;
+        }
+
+        .coverage-photo {
+            position: relative;
+            overflow: hidden;
+            border-radius: 24px;
+            background: var(--blue-soft);
+            border: 1px solid rgba(0, 118, 211, 0.16);
+            box-shadow: 0 18px 44px rgba(15, 23, 42, 0.10);
+        }
+
+        .coverage-photo img {
+            width: 100%;
+            height: 100%;
+            aspect-ratio: 4 / 3;
+            object-fit: cover;
+            display: block;
+        }
+
+        .coverage-photo--hero {
+            border-radius: 32px 32px 0 0;
+            border: 0;
+            box-shadow: none;
+        }
+
+        .coverage-photo--hero img {
+            aspect-ratio: 16 / 9;
+        }
+
+        .coverage-photo--results img {
+            aspect-ratio: 16 / 9;
+        }
+
+        .coverage-photo--scan img {
+            aspect-ratio: 4 / 3;
+        }
+
+        .hero-panel-body {
+            padding: 1.15rem;
+        }
+
+        .hero-visual-points {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.75rem;
+            margin-top: 0.9rem;
+        }
+
+        .hero-visual-point {
+            display: flex;
+            align-items: center;
+            gap: 0.55rem;
+            padding: 0.75rem;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.10);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            font-weight: 800;
+        }
+
+        .hero-visual-point i {
+            color: var(--gold);
+        }
+
+        .visual-support-grid {
+            display: grid;
+            grid-template-columns: minmax(240px, 0.8fr) minmax(0, 1fr);
+            gap: 1.25rem;
+            align-items: center;
+            margin-bottom: 1.25rem;
         }
 
         .eyebrow {
@@ -870,6 +943,7 @@
             .calc-layout,
             .info-grid,
             .ai-overview,
+            .visual-support-grid,
             .room-grid,
             .ai-metrics {
                 grid-template-columns: 1fr;
@@ -902,6 +976,14 @@
 
             .hero-title {
                 max-width: none;
+            }
+
+            .hero-visual-points {
+                grid-template-columns: 1fr;
+            }
+
+            .coverage-photo--hero img {
+                aspect-ratio: 4 / 3;
             }
 
             .section-shell {
@@ -1036,9 +1118,9 @@
     <header id="main-header" class="f-header">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-start items-center h-20">
-                <a href="https://www.billlayneinsurance.com/" class="header-back-link">
-                    <i class="fas fa-arrow-left"></i>
-                    <span>Back to Bill Layne Insurance</span>
+                <a href="https://www.billlayneinsurance.com/" class="header-back-link" aria-label="Bill Layne Insurance home page">
+                    <i class="fas fa-shield-halved"></i>
+                    <span>Bill Layne Insurance</span>
                 </a>
             </div>
         </div>
@@ -1052,7 +1134,7 @@
                         <span class="eyebrow"><i class="fas fa-building-shield"></i> Condo Interior Coverage Estimator</span>
                         <h1 class="hero-title">Estimate the inside coverage your condo may need.</h1>
                         <p class="hero-subtitle">
-                            Your condo association may cover the outside building, but you may need coverage for the inside: cabinets, counters, flooring, paint, fixtures, appliances, and built-ins.
+                            A simple way to estimate cabinets, flooring, fixtures, appliances, and built-ins.
                         </p>
                         <div class="hero-actions">
                             <a class="cta-btn cta-btn--primary" href="#calculator"><i class="fas fa-calculator"></i>Start the estimate</a>
@@ -1060,25 +1142,29 @@
                         </div>
                     </div>
 
-                    <aside class="hero-panel" aria-label="Coverage overview">
-                        <p class="text-sm uppercase tracking-[0.18em] text-blue-100">What this estimate includes</p>
-                        <h2 class="text-3xl mt-3 mb-3">Interior items owners often have to rebuild after a loss</h2>
-                        <div class="signal-grid">
-                            <div class="signal">
-                                <strong>Cabinets</strong>
-                                <span>Kitchen, bath, laundry, wet bar, custom storage</span>
-                            </div>
-                            <div class="signal">
-                                <strong>Flooring</strong>
-                                <span>Carpet, LVP, hardwood, tile, stone, transitions</span>
-                            </div>
-                            <div class="signal">
-                                <strong>Fixtures</strong>
-                                <span>Lighting, plumbing fixtures, vanities, mirrors, fans</span>
-                            </div>
-                            <div class="signal">
-                                <strong>Finish work</strong>
-                                <span>Paint, trim, doors, millwork, built-ins, countertops</span>
+                    <aside class="hero-panel" aria-label="Condo coverage visual overview">
+                        <figure class="coverage-photo coverage-photo--hero">
+                            <img src="assets/condo-hero.webp" alt="Condo owner using a phone to review a simple coverage estimate in a bright condo living room" width="1200" height="675" decoding="async" fetchpriority="high">
+                        </figure>
+                        <div class="hero-panel-body">
+                            <p class="text-sm uppercase tracking-[0.18em] text-blue-100">Simple condo coverage help</p>
+                            <div class="hero-visual-points">
+                                <div class="hero-visual-point">
+                                    <i class="fas fa-kitchen-set"></i>
+                                    <span>Cabinets</span>
+                                </div>
+                                <div class="hero-visual-point">
+                                    <i class="fas fa-border-all"></i>
+                                    <span>Flooring</span>
+                                </div>
+                                <div class="hero-visual-point">
+                                    <i class="fas fa-lightbulb"></i>
+                                    <span>Fixtures</span>
+                                </div>
+                                <div class="hero-visual-point">
+                                    <i class="fas fa-paint-roller"></i>
+                                    <span>Finishes</span>
+                                </div>
                             </div>
                         </div>
                     </aside>
@@ -1113,7 +1199,7 @@
                         <p class="section-label">Calculator</p>
                         <h2 id="calculator-title" class="text-4xl mt-2">Condo inside-coverage calculator</h2>
                         <p class="text-slate-600 mt-3 max-w-3xl">
-                            Answer a few simple questions about your condo. The calculator estimates what it may cost to rebuild the inside, then adds a cushion for cleanup, labor, and price changes.
+                            Answer a few simple questions. We estimate the inside of the condo and add a cushion for cleanup, labor, and price changes.
                         </p>
 
                         <form id="condoCalculatorForm" class="form-grid mt-6">
@@ -1270,8 +1356,15 @@
                 </div>
 
                 <div class="checklist-card mt-6">
-                    <p class="section-label">What to verify next</p>
-                    <h2 class="text-3xl mt-2 mb-4">Questions every condo owner should ask</h2>
+                    <div class="visual-support-grid">
+                        <figure class="coverage-photo coverage-photo--results">
+                            <img src="assets/condo-results.webp" alt="Condo owner reviewing a simple insurance coverage estimate with a local agent" width="1200" height="675" loading="lazy" decoding="async">
+                        </figure>
+                        <div>
+                            <p class="section-label">What to verify next</p>
+                            <h2 class="text-3xl mt-2 mb-4">Questions every condo owner should ask</h2>
+                        </div>
+                    </div>
                     <div class="grid md:grid-cols-2 gap-6">
                         <div>
                             <ul class="space-y-3 text-slate-700">
@@ -1301,8 +1394,11 @@
                         <section class="ai-panel">
                             <p class="section-label">AI Room Scan</p>
                             <h2 class="text-3xl mt-2">Upload room photos to estimate attached condo features.</h2>
+                            <figure class="coverage-photo coverage-photo--scan mt-4">
+                                <img src="assets/condo-room-scan.webp" alt="Homeowner using a phone camera to photograph attached condo kitchen finishes for documentation" width="1100" height="825" loading="lazy" decoding="async">
+                            </figure>
                             <p class="text-slate-600 mt-3">
-                                Add clear photos of each room. The AI looks for attached items like cabinets, counters, vanities, flooring, trim, lighting, plumbing fixtures, appliances, and built-ins. It ignores furniture and personal belongings.
+                                Take clear room photos. The AI looks for attached items like cabinets, flooring, lights, fixtures, appliances, and built-ins. It ignores furniture.
                             </p>
                             <div class="trust-line"><i class="fas fa-lock"></i><span>Your photos stay private and are used only to estimate attached condo features.</span></div>
                             <p class="text-slate-500 mt-3 text-sm">
