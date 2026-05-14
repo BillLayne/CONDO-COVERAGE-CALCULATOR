@@ -573,10 +573,127 @@
             color: var(--muted);
         }
 
-        .checklist-card ul,
         .results-card ul {
             margin: 0;
             padding-left: 1.1rem;
+        }
+
+        .help-card-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.9rem;
+            margin-top: 1rem;
+        }
+
+        .help-card {
+            border-radius: 22px;
+            background: rgba(248, 250, 252, 0.94);
+            border: 1px solid rgba(148, 163, 184, 0.22);
+            overflow: hidden;
+        }
+
+        .help-card summary {
+            list-style: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            min-height: 64px;
+            padding: 1rem;
+        }
+
+        .help-card summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .help-question {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            color: var(--ink);
+            font-weight: 800;
+            line-height: 1.3;
+        }
+
+        .help-question i {
+            width: 36px;
+            height: 36px;
+            border-radius: 12px;
+            background: var(--blue-soft);
+            color: var(--blue);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex: 0 0 auto;
+        }
+
+        .help-cue {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            color: var(--navy);
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .help-cue::after {
+            content: "+";
+            width: 28px;
+            height: 28px;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border: 1px solid rgba(0, 118, 211, 0.22);
+            color: var(--blue);
+        }
+
+        .help-card[open] .help-cue::after {
+            content: "-";
+        }
+
+        .help-answer {
+            padding: 0 1rem 1rem;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        .help-answer p {
+            margin: 0 0 0.75rem;
+        }
+
+        .help-ask {
+            display: flex;
+            gap: 0.55rem;
+            padding: 0.8rem;
+            border-radius: 16px;
+            background: white;
+            border: 1px solid rgba(0, 118, 211, 0.14);
+            color: var(--ink);
+            font-weight: 700;
+        }
+
+        .help-ask i {
+            color: var(--success);
+            margin-top: 0.2rem;
+        }
+
+        .help-resource {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 20px;
+            background: var(--blue-soft);
+            border: 1px solid rgba(0, 118, 211, 0.16);
+            color: var(--navy);
+            font-weight: 700;
+        }
+
+        .help-resource a {
+            color: var(--navy);
+            text-decoration: underline;
+            text-underline-offset: 3px;
         }
 
         .disclaimer {
@@ -944,6 +1061,7 @@
             .info-grid,
             .ai-overview,
             .visual-support-grid,
+            .help-card-grid,
             .room-grid,
             .ai-metrics {
                 grid-template-columns: 1fr;
@@ -1074,9 +1192,14 @@
                 padding: 0.9rem;
             }
 
-            .checklist-card ul,
             .results-card ul {
                 padding-left: 1rem;
+            }
+
+            .help-card summary {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 0.65rem;
             }
         }
 
@@ -1365,21 +1488,65 @@
                             <h2 class="text-3xl mt-2 mb-4">Questions every condo owner should ask</h2>
                         </div>
                     </div>
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <div>
-                            <ul class="space-y-3 text-slate-700">
-                                <li>Does the association policy stop at bare walls, or does it include original cabinets and fixtures?</li>
-                                <li>Could the association charge you after a large shared loss?</li>
-                                <li>Have you upgraded the condo since buying it?</li>
-                            </ul>
-                        </div>
-                        <div>
-                            <ul class="space-y-3 text-slate-700">
-                                <li>Are appliances, flooring, and custom closets your responsibility?</li>
-                                <li>Could cleanup, code upgrades, or higher labor costs raise the repair bill?</li>
-                                <li>Do you also have enough contents, liability, and water backup coverage?</li>
-                            </ul>
-                        </div>
+                    <div class="help-card-grid">
+                        <details class="help-card">
+                            <summary>
+                                <span class="help-question"><i class="fas fa-person-shelter"></i>Does the association policy stop at bare walls?</span>
+                                <span class="help-cue">What does this mean?</span>
+                            </summary>
+                            <div class="help-answer">
+                                <p>Bare walls usually means the association covers the building structure, but you may need to insure inside items like cabinets, flooring, paint, fixtures, appliances, and built-ins.</p>
+                                <div class="help-ask"><i class="fas fa-file-lines"></i><span>Ask for the condo master policy and the page that says what the association covers.</span></div>
+                            </div>
+                        </details>
+
+                        <details class="help-card">
+                            <summary>
+                                <span class="help-question"><i class="fas fa-people-roof"></i>Could the association charge you after a shared loss?</span>
+                                <span class="help-cue">What is this?</span>
+                            </summary>
+                            <div class="help-answer">
+                                <p>A loss assessment is when the condo association bills owners for part of a covered building loss or a large deductible.</p>
+                                <div class="help-ask"><i class="fas fa-file-lines"></i><span>Ask what the master policy deductible is and whether your condo policy includes loss assessment coverage.</span></div>
+                            </div>
+                        </details>
+
+                        <details class="help-card">
+                            <summary>
+                                <span class="help-question"><i class="fas fa-screwdriver-wrench"></i>Have you upgraded the condo?</span>
+                                <span class="help-cue">What counts?</span>
+                            </summary>
+                            <div class="help-answer">
+                                <p>Upgrades can include newer cabinets, stone counters, better flooring, custom closets, built-ins, lighting, bathroom tile, or nicer appliances.</p>
+                                <div class="help-ask"><i class="fas fa-camera"></i><span>Take photos of upgrades and keep receipts if you have them.</span></div>
+                            </div>
+                        </details>
+
+                        <details class="help-card">
+                            <summary>
+                                <span class="help-question"><i class="fas fa-couch"></i>Are contents covered separately?</span>
+                                <span class="help-cue">What are contents?</span>
+                            </summary>
+                            <div class="help-answer">
+                                <p>Contents are things you would take with you if you moved: furniture, clothes, electronics, dishes, jewelry, and personal belongings.</p>
+                                <div class="help-ask"><i class="fas fa-box-open"></i><span>This calculator estimates attached condo features, not your personal property.</span></div>
+                            </div>
+                        </details>
+
+                        <details class="help-card">
+                            <summary>
+                                <span class="help-question"><i class="fas fa-clipboard-question"></i>What should I ask my HOA for?</span>
+                                <span class="help-cue">Show me</span>
+                            </summary>
+                            <div class="help-answer">
+                                <p>Ask for the master insurance policy, bylaws, deductible amount, and whether the policy is bare walls, original specs, single entity, or all-in.</p>
+                                <div class="help-ask"><i class="fas fa-phone"></i><span>Not sure what it says? Bill Layne Insurance can help you review it.</span></div>
+                            </div>
+                        </details>
+                    </div>
+
+                    <div class="help-resource">
+                        Want a deeper explanation? Read a plain-language condo insurance overview from an insurance department: <a href="https://www.insurance.wa.gov/insurance-resources/condo-insurance/learn-how-condo-insurance-works" target="_blank" rel="noopener">how condo and association policies work together</a>.
                     </div>
 
                     <div class="calc-actions">
