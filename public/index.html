@@ -772,6 +772,22 @@
             color: #92400e;
         }
 
+        .manual-reset-status {
+            display: none;
+            margin-top: 0.85rem;
+            padding: 0.85rem 1rem;
+            border-radius: 18px;
+            background: var(--blue-soft);
+            border: 1px solid rgba(0, 118, 211, 0.16);
+            color: var(--navy);
+            font-weight: 700;
+            line-height: 1.4;
+        }
+
+        .manual-reset-status.is-visible {
+            display: block;
+        }
+
         .trust-line {
             display: flex;
             align-items: flex-start;
@@ -1416,7 +1432,7 @@
                             Prefer not to use photos, or want to adjust the result? Use these simple inputs as a backup estimate.
                         </p>
 
-                        <form id="condoCalculatorForm" class="form-grid mt-6">
+                        <form id="condoCalculatorForm" class="form-grid mt-6" autocomplete="off">
                             <div class="field">
                                 <label for="squareFeet">Condo square footage</label>
                                 <input id="squareFeet" name="squareFeet" type="number" min="300" max="6000" step="10" value="1200" inputmode="numeric" required>
@@ -1518,8 +1534,9 @@
 
                         <div class="calc-actions">
                             <button type="button" id="calculateBtn" class="pill-button pill-button--primary"><i class="fas fa-sparkles"></i>Fine tune estimate</button>
-                            <button type="button" id="resetBtn" class="pill-button pill-button--ghost"><i class="fas fa-rotate-left"></i>Reset inputs</button>
+                            <button type="button" id="resetBtn" class="pill-button pill-button--ghost"><i class="fas fa-rotate-left"></i>Refresh fields</button>
                         </div>
+                        <div id="manualResetStatus" class="manual-reset-status" role="status" aria-live="polite"></div>
 
                         <div class="disclaimer">
                             This estimates the inside parts of the condo, not your furniture, clothing, electronics, or jewelry. Those are reviewed under contents coverage.
@@ -1659,9 +1676,6 @@
                                 Take clear room photos. The AI looks for attached items like cabinets, flooring, lights, fixtures, appliances, and built-ins. It ignores furniture.
                             </p>
                             <div class="trust-line"><i class="fas fa-lock"></i><span>Your photos stay private and are used only to estimate attached condo features.</span></div>
-                            <p class="text-slate-500 mt-3 text-sm">
-                                iPhone HEIC and HEIF photos are accepted and converted automatically before analysis.
-                            </p>
                             <div class="calc-actions">
                                 <button type="button" id="addCustomRoomBtn" class="pill-button pill-button--ghost"><i class="fas fa-plus"></i>Add custom room</button>
                                 <button type="button" id="analyzeAllRoomsBtn" class="pill-button pill-button--primary"><i class="fas fa-camera-retro"></i><span id="analyzeAllRoomsLabel">Analyze ready rooms</span></button>
@@ -1765,6 +1779,7 @@
         const masterPolicyBuffers = { original: 0.1, barewalls: 0.18, unknown: 0.14 };
         const closetCosts = 2400;
         const builtInCosts = 3200;
+        let manualResetTimer = null;
         window.condoAiState = { subtotal: 0, bufferedEstimate: 0, analyzedRooms: 0 };
 
         function roundUpToNearest(value, increment) {
@@ -1773,6 +1788,29 @@
 
         function formatMoney(value) {
             return currency.format(Math.max(0, Math.round(value)));
+        }
+
+        function setManualResetStatus(message, autoHide = true) {
+            const status = document.getElementById("manualResetStatus");
+            if (!status) return;
+            window.clearTimeout(manualResetTimer);
+            status.textContent = message;
+            status.classList.add("is-visible");
+            if (autoHide) {
+                manualResetTimer = window.setTimeout(() => {
+                    status.classList.remove("is-visible");
+                }, 4500);
+            }
+        }
+
+        function resetManualFields(showStatus = false) {
+            const form = document.getElementById("condoCalculatorForm");
+            if (!form) return;
+            form.reset();
+            calculateCoverage();
+            if (showStatus) {
+                setManualResetStatus("Manual fields refreshed to the starting values.");
+            }
         }
 
         function buildReasons(inputs, recommendation, bufferAmount, aiState) {
@@ -1878,8 +1916,7 @@
             revealResults();
         });
         document.getElementById("resetBtn").addEventListener("click", function() {
-            document.getElementById("condoCalculatorForm").reset();
-            calculateCoverage();
+            resetManualFields(true);
         });
         document.addEventListener("DOMContentLoaded", function() {
             window.addEventListener("scroll", function() {
@@ -1891,7 +1928,13 @@
                 }
             });
 
-            calculateCoverage();
+            resetManualFields(false);
+        });
+
+        window.addEventListener("pageshow", function(event) {
+            if (event.persisted) {
+                resetManualFields(false);
+            }
         });
     </script>
     <script type="module">
