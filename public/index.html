@@ -110,16 +110,29 @@
         }
 
         .f-header {
-            background: rgba(255, 255, 255, 0.96);
-            border-bottom: 1px solid rgba(15, 23, 42, 0.08);
             position: fixed;
-            inset: 0 0 auto 0;
+            inset: 1rem 0 auto 0;
             z-index: 50;
-            backdrop-filter: blur(16px);
             transition: box-shadow 0.25s ease;
+            pointer-events: none;
         }
 
-        .f-header.scrolled {
+        .header-shell {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            min-height: 72px;
+            padding: 0.7rem 0.9rem 0.7rem 1.25rem;
+            border-radius: 28px;
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.78);
+            box-shadow: 0 18px 46px rgba(15, 23, 42, 0.12);
+            backdrop-filter: blur(18px);
+            pointer-events: auto;
+        }
+
+        .f-header.scrolled .header-shell {
             box-shadow: 0 16px 40px rgba(15, 23, 42, 0.12);
         }
 
@@ -128,59 +141,86 @@
             align-items: center;
             gap: 0.6rem;
             min-height: 48px;
-            padding: 0.75rem 1rem;
+            padding: 0.45rem 0;
             border-radius: 999px;
             color: var(--navy);
-            background: var(--blue-soft);
             font-weight: 800;
             text-decoration: none;
+            font-family: "Outfit", system-ui, sans-serif;
+            font-size: 1.12rem;
         }
 
         .header-back-link i {
+            width: 38px;
+            height: 38px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--blue), var(--navy));
+            color: white;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 0.8rem;
+        }
+
+        .header-phone {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            color: var(--ink);
+            font-weight: 800;
+            text-decoration: none;
+            min-height: 44px;
+            padding: 0 0.35rem;
+        }
+
+        .header-phone i {
             color: var(--blue);
         }
 
+        .header-quote {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 48px;
+            padding: 0.85rem 1.35rem;
+            border-radius: 16px;
+            background: linear-gradient(135deg, var(--blue), #1d4ed8);
+            color: white;
+            font-weight: 900;
+            text-decoration: none;
+            box-shadow: 0 12px 24px rgba(37, 99, 235, 0.22);
+        }
+
         main {
-            padding-top: 80px;
+            padding-top: 0;
         }
 
         .hero-shell {
             position: relative;
             overflow: hidden;
-            padding: 3.5rem 0 2rem;
-        }
-
-        .hero-shell::before,
-        .hero-shell::after {
-            content: "";
-            position: absolute;
-            border-radius: 999px;
-            filter: blur(18px);
-            opacity: 0.75;
-            pointer-events: none;
-        }
-
-        .hero-shell::before {
-            width: 260px;
-            height: 260px;
-            background: rgba(29, 78, 216, 0.18);
-            top: -60px;
-            right: -40px;
-        }
-
-        .hero-shell::after {
-            width: 200px;
-            height: 200px;
-            background: rgba(245, 158, 11, 0.16);
-            bottom: 20px;
-            left: -50px;
+            padding: 7rem 0 2rem;
+            background:
+                radial-gradient(circle at 78% 18%, rgba(255, 255, 255, 0.92), transparent 28%),
+                linear-gradient(180deg, rgba(219, 234, 254, 0.82), rgba(248, 250, 252, 0.72));
         }
 
         .hero-grid {
             display: grid;
-            grid-template-columns: minmax(0, 1.25fr) minmax(320px, 0.9fr);
-            gap: 1.5rem;
-            align-items: stretch;
+            grid-template-columns: minmax(420px, 0.94fr) minmax(0, 1.06fr);
+            gap: 0;
+            align-items: center;
+            height: clamp(650px, 72vh, 760px);
+            border-radius: 34px;
+            overflow: hidden;
+            background: linear-gradient(90deg, #ffffff 0%, rgba(255, 255, 255, 0.96) 32%, rgba(255, 255, 255, 0.35) 52%, rgba(255, 255, 255, 0) 68%);
+            box-shadow: 0 28px 70px rgba(15, 23, 42, 0.14);
+            border: 1px solid rgba(255, 255, 255, 0.78);
         }
 
         .hero-copy,
@@ -196,16 +236,29 @@
         }
 
         .hero-copy {
-            border-radius: 32px;
-            padding: 2rem;
+            position: relative;
+            z-index: 2;
+            border: 0;
+            border-radius: 0;
+            box-shadow: none;
+            background: transparent;
+            backdrop-filter: none;
+            padding: 3.2rem 1.6rem 6rem 3.7rem;
         }
 
         .hero-panel {
-            border-radius: 32px;
+            align-self: stretch;
+            position: relative;
+            z-index: 1;
+            min-height: 100%;
+            border-radius: 0;
             padding: 0;
-            background: linear-gradient(165deg, rgba(0, 63, 135, 0.98), rgba(0, 118, 211, 0.94));
-            color: white;
+            background: #eaf2fb;
+            color: var(--ink);
             overflow: hidden;
+            border: 0;
+            box-shadow: none;
+            backdrop-filter: none;
         }
 
         .coverage-photo {
@@ -226,13 +279,22 @@
         }
 
         .coverage-photo--hero {
-            border-radius: 32px 32px 0 0;
+            height: 100%;
+            border-radius: 0;
             border: 0;
             box-shadow: none;
+            background: transparent;
         }
 
         .coverage-photo--hero img {
-            aspect-ratio: 16 / 9;
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            min-height: 0;
+            aspect-ratio: unset;
+            object-fit: cover;
+            object-position: 70% center;
         }
 
         .coverage-photo--results img {
@@ -244,7 +306,7 @@
         }
 
         .hero-panel-body {
-            padding: 1.15rem;
+            display: none;
         }
 
         .hero-visual-points {
@@ -357,17 +419,42 @@
         }
 
         .hero-title {
-            font-size: clamp(2.2rem, 5vw, 4.5rem);
-            line-height: 0.94;
-            margin: 1rem 0;
-            max-width: 10ch;
+            font-size: clamp(2.8rem, 4.6vw, 4.35rem);
+            line-height: 0.96;
+            margin: 1.25rem 0 1rem;
+            max-width: 12.2ch;
+            color: #050b2b;
+            letter-spacing: -0.045em;
+        }
+
+        .hero-title-mark {
+            position: relative;
+            display: inline-block;
+            color: #1d6fe8;
+            white-space: nowrap;
+        }
+
+        .hero-title-mark::after {
+            content: "";
+            position: absolute;
+            left: 0.08em;
+            right: 0.02em;
+            bottom: -0.08em;
+            height: 0.1em;
+            border-radius: 999px;
+            background: var(--gold);
+            transform: rotate(-2deg);
+        }
+
+        .hero-mobile-visual {
+            display: none;
         }
 
         .hero-subtitle {
-            font-size: 1.1rem;
-            line-height: 1.7;
-            color: var(--muted);
-            max-width: 58ch;
+            font-size: clamp(1rem, 1.4vw, 1.18rem);
+            line-height: 1.55;
+            color: #26344f;
+            max-width: 40ch;
         }
 
         .hero-actions {
@@ -382,9 +469,10 @@
             align-items: center;
             justify-content: center;
             gap: 0.65rem;
-            padding: 0.95rem 1.3rem;
-            border-radius: 999px;
-            font-weight: 700;
+            min-height: 58px;
+            padding: 1rem 1.45rem;
+            border-radius: 18px;
+            font-weight: 900;
             text-decoration: none;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
@@ -402,8 +490,91 @@
 
         .cta-btn--secondary {
             background: white;
-            border: 1px solid var(--line);
-            color: var(--ink);
+            border: 1.5px solid rgba(29, 111, 232, 0.75);
+            color: #050b2b;
+        }
+
+        .hero-trust {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin-top: 1.25rem;
+            color: #36527d;
+            font-weight: 700;
+        }
+
+        .hero-trust i {
+            width: 28px;
+            height: 28px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 999px;
+            background: #2563eb;
+            color: white;
+            flex: 0 0 auto;
+            font-size: 0.85rem;
+        }
+
+        .hero-process-card {
+            width: min(calc(100% - 2rem), 1480px);
+            margin: -3.2rem auto 0;
+            position: relative;
+            z-index: 3;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0;
+            border-radius: 28px;
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 24px 58px rgba(15, 23, 42, 0.13);
+            backdrop-filter: blur(12px);
+            overflow: hidden;
+        }
+
+        .hero-process-step {
+            display: grid;
+            grid-template-columns: 70px 1fr auto;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.35rem 1.8rem;
+            min-height: 132px;
+        }
+
+        .hero-process-step + .hero-process-step {
+            border-left: 1px solid rgba(148, 163, 184, 0.22);
+        }
+
+        .hero-process-icon {
+            width: 66px;
+            height: 66px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 999px;
+            background: #e8f1ff;
+            color: #1d6fe8;
+            font-size: 1.55rem;
+            border: 1px solid rgba(37, 99, 235, 0.12);
+        }
+
+        .hero-process-step strong {
+            display: block;
+            font-family: "Outfit", system-ui, sans-serif;
+            font-size: 1.25rem;
+            color: #050b2b;
+        }
+
+        .hero-process-step span {
+            display: block;
+            margin-top: 0.3rem;
+            color: #475569;
+            line-height: 1.45;
+        }
+
+        .hero-process-arrow {
+            color: #1d6fe8;
+            font-size: 1.25rem;
         }
 
         .signal-grid {
@@ -1187,14 +1358,65 @@
                 grid-template-columns: 1fr;
             }
 
+            .hero-grid {
+                height: auto;
+                min-height: auto;
+                background: #ffffff;
+            }
+
+            .hero-process-card {
+                grid-template-columns: 1fr;
+                margin-top: -2.2rem;
+            }
+
+            .hero-process-step + .hero-process-step {
+                border-left: 0;
+                border-top: 1px solid rgba(148, 163, 184, 0.22);
+            }
+
             .results-card {
                 position: static;
             }
         }
 
         @media (max-width: 720px) {
+            .f-header {
+                inset: 0.55rem 0 auto 0;
+            }
+
+            .header-shell {
+                min-height: 62px;
+                border-radius: 22px;
+                padding: 0.45rem 0.55rem 0.45rem 0.75rem;
+            }
+
+            .header-back-link {
+                font-size: 0.98rem;
+                min-height: 42px;
+            }
+
+            .header-back-link i {
+                width: 34px;
+                height: 34px;
+                border-radius: 12px;
+            }
+
+            .header-phone {
+                width: 42px;
+                min-height: 42px;
+                justify-content: center;
+                border-radius: 14px;
+                background: var(--blue-soft);
+                padding: 0;
+            }
+
+            .header-phone span,
+            .header-quote {
+                display: none;
+            }
+
             .hero-shell {
-                padding-top: 2.5rem;
+                padding-top: 5.3rem;
             }
 
             .hero-copy,
@@ -1206,30 +1428,84 @@
                 border-radius: 24px;
             }
 
+            .hero-grid {
+                border-radius: 28px;
+            }
+
             .form-grid,
             .signal-grid,
             .thumb-grid {
                 grid-template-columns: 1fr;
             }
 
+            .hero-copy {
+                padding: 1.2rem 1.05rem 1.05rem;
+            }
+
             .hero-title {
                 max-width: none;
+                font-size: clamp(2.05rem, 10vw, 2.8rem);
+                line-height: 1;
+            }
+
+            .hero-subtitle {
+                font-size: 1rem;
+                line-height: 1.45;
             }
 
             .hero-visual-points {
                 grid-template-columns: 1fr;
             }
 
-            .coverage-photo--hero img {
-                aspect-ratio: 4 / 3;
+            .hero-panel {
+                display: none;
+            }
+
+            .hero-mobile-visual {
+                display: block;
+                margin: 1rem 0 1.05rem;
+                border-radius: 22px;
+                overflow: hidden;
+                border: 1px solid rgba(0, 118, 211, 0.16);
+                box-shadow: 0 18px 42px rgba(15, 23, 42, 0.12);
+                background: var(--blue-soft);
+            }
+
+            .hero-mobile-visual img {
+                display: block;
+                width: 100%;
+                height: auto;
+                aspect-ratio: 16 / 10;
+                object-fit: cover;
+                object-position: 62% center;
+            }
+
+            .hero-process-card {
+                width: calc(100% - 2rem);
+                margin-top: 1rem;
+                border-radius: 24px;
+            }
+
+            .hero-process-step {
+                grid-template-columns: 54px 1fr;
+                min-height: auto;
+                padding: 1rem;
+            }
+
+            .hero-process-icon {
+                width: 52px;
+                height: 52px;
+                font-size: 1.25rem;
+            }
+
+            .hero-process-arrow {
+                display: none;
             }
 
             .section-shell {
                 padding: 0.65rem 0 2.4rem;
             }
 
-            .hero-copy,
-            .hero-panel,
             .calc-card,
             .results-card,
             .checklist-card,
@@ -1252,6 +1528,14 @@
             .hero-actions {
                 flex-direction: column;
                 align-items: stretch;
+            }
+
+            .hero-actions .cta-btn--secondary {
+                display: none;
+            }
+
+            .hero-trust {
+                display: none;
             }
 
             .calc-actions > *,
@@ -1325,7 +1609,7 @@
 
         @media (max-width: 540px) {
             main {
-                padding-top: 72px;
+                padding-top: 0;
             }
 
             .f-header .h-20 {
@@ -1333,7 +1617,7 @@
             }
 
             .hero-title {
-                font-size: clamp(2rem, 10.5vw, 2.8rem);
+                font-size: clamp(1.95rem, 9.6vw, 2.5rem);
                 line-height: 0.98;
             }
 
@@ -1360,11 +1644,15 @@
 
     <header id="main-header" class="f-header">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-start items-center h-20">
+            <div class="header-shell">
                 <a href="https://www.billlayneinsurance.com/" class="header-back-link" aria-label="Bill Layne Insurance home page">
                     <i class="fas fa-shield-halved"></i>
                     <span>Bill Layne Insurance</span>
                 </a>
+                <div class="header-actions" aria-label="Contact actions">
+                    <a class="header-phone" href="tel:3368351993"><i class="fas fa-phone"></i><span>(336) 835-1993</span></a>
+                    <a class="header-quote" href="https://www.billlayneinsurance.com/">Get a Quote</a>
+                </div>
             </div>
         </div>
     </header>
@@ -1374,43 +1662,52 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="hero-grid">
                     <div class="hero-copy">
-                        <span class="eyebrow"><i class="fas fa-building-shield"></i> Condo Interior Coverage Estimator</span>
-                        <h1 class="hero-title">Start with photos. Get a condo coverage estimate.</h1>
+                        <span class="eyebrow"><i class="fas fa-wand-magic-sparkles"></i> AI Condo Interior Coverage Estimator</span>
+                        <h1 class="hero-title">Snap room photos. Get a condo coverage estimate <span class="hero-title-mark">in minutes.</span></h1>
+                        <figure class="hero-mobile-visual" aria-label="AI camera scan preview">
+                            <img src="assets/condo-hero-ai-camera.webp" alt="Phone camera scanning a condo room while AI detects cabinets, flooring, fixtures, and finishes" width="1072" height="658" decoding="async" fetchpriority="high">
+                        </figure>
                         <p class="hero-subtitle">
-                            Take room photos first. Add square footage only if you want a quick size check.
+                            Use your phone to capture kitchens, baths, flooring, cabinets, and finishes. Our AI helps estimate the interior coverage your condo may need.
                         </p>
                         <div class="hero-actions">
                             <a class="cta-btn cta-btn--primary" href="#ai-room-scan"><i class="fas fa-camera"></i>Start with photos</a>
-                            <a class="cta-btn cta-btn--secondary" href="#size-check"><i class="fas fa-ruler-combined"></i>Add square footage</a>
+                            <a class="cta-btn cta-btn--secondary" href="#calculator"><i class="fas fa-circle-play"></i>How it works</a>
                         </div>
+                        <div class="hero-trust"><i class="fas fa-shield-halved"></i><span>Built for condo owners who want a simple starting point.</span></div>
                     </div>
 
                     <aside class="hero-panel" aria-label="Condo coverage visual overview">
                         <figure class="coverage-photo coverage-photo--hero">
-                            <img src="assets/condo-hero.webp" alt="Condo owner using a phone to review a simple coverage estimate in a bright condo living room" width="1200" height="675" decoding="async" fetchpriority="high">
+                            <img src="assets/condo-hero-ai-camera.webp" alt="Phone camera scanning a condo room while AI detects cabinets, flooring, fixtures, and finishes" width="1072" height="658" decoding="async" fetchpriority="high">
                         </figure>
-                        <div class="hero-panel-body">
-                            <p class="text-sm uppercase tracking-[0.18em] text-blue-100">Simple condo coverage help</p>
-                            <div class="hero-visual-points">
-                                <div class="hero-visual-point">
-                                    <i class="fas fa-kitchen-set"></i>
-                                    <span>Cabinets</span>
-                                </div>
-                                <div class="hero-visual-point">
-                                    <i class="fas fa-border-all"></i>
-                                    <span>Flooring</span>
-                                </div>
-                                <div class="hero-visual-point">
-                                    <i class="fas fa-lightbulb"></i>
-                                    <span>Fixtures</span>
-                                </div>
-                                <div class="hero-visual-point">
-                                    <i class="fas fa-paint-roller"></i>
-                                    <span>Finishes</span>
-                                </div>
-                            </div>
-                        </div>
                     </aside>
+                </div>
+
+                <div class="hero-process-card" aria-label="How the condo estimate works">
+                    <div class="hero-process-step">
+                        <span class="hero-process-icon"><i class="fas fa-mobile-screen-button"></i></span>
+                        <div>
+                            <strong>1. Take Photos</strong>
+                            <span>Snap photos of each room and key features.</span>
+                        </div>
+                        <i class="fas fa-chevron-right hero-process-arrow" aria-hidden="true"></i>
+                    </div>
+                    <div class="hero-process-step">
+                        <span class="hero-process-icon"><i class="fas fa-brain"></i></span>
+                        <div>
+                            <strong>2. AI Reviews Features</strong>
+                            <span>Our AI identifies cabinets, flooring, fixtures, and finishes.</span>
+                        </div>
+                        <i class="fas fa-chevron-right hero-process-arrow" aria-hidden="true"></i>
+                    </div>
+                    <div class="hero-process-step">
+                        <span class="hero-process-icon"><i class="fas fa-file-invoice-dollar"></i></span>
+                        <div>
+                            <strong>3. See Your Estimate</strong>
+                            <span>Get your estimated interior value in minutes.</span>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="info-strip">
@@ -1437,29 +1734,6 @@
 
         <section id="calculator" class="section-shell">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 estimate-flow">
-                <div class="estimate-workflow" aria-label="Estimate steps">
-                    <div class="workflow-step">
-                        <span class="workflow-number">1</span>
-                        <div>
-                            <strong>Take photos</strong>
-                            <span>Let AI look for attached condo features.</span>
-                        </div>
-                    </div>
-                    <div class="workflow-step">
-                        <span class="workflow-number">2</span>
-                        <div>
-                            <strong>Optional size check</strong>
-                            <span>Add square footage if you want a quick backup check.</span>
-                        </div>
-                    </div>
-                    <div class="workflow-step">
-                        <span class="workflow-number">3</span>
-                        <div>
-                            <strong>Review amount</strong>
-                            <span>Use the stronger result as a starting point.</span>
-                        </div>
-                    </div>
-                </div>
                 <div class="calc-layout">
                     <section id="size-check" class="calc-card" aria-labelledby="calculator-title">
                         <p class="section-label">Step 2 - Optional size check</p>
