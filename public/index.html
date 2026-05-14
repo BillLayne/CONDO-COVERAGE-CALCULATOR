@@ -560,6 +560,20 @@
             color: #1d6fe8;
             font-size: 1.55rem;
             border: 1px solid rgba(37, 99, 235, 0.12);
+            flex: 0 0 auto;
+            line-height: 1;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .hero-process-icon i {
+            display: block;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            line-height: 1;
+            margin: 0;
+            transform: translate(-50%, -50%);
         }
 
         .hero-process-step strong {
@@ -626,7 +640,7 @@
 
         .calc-layout {
             display: grid;
-            grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+            grid-template-columns: minmax(0, 1fr);
             gap: 1.5rem;
             align-items: start;
         }
@@ -764,8 +778,7 @@
         }
 
         .results-card {
-            position: sticky;
-            top: 102px;
+            position: static;
             scroll-margin-top: 96px;
         }
 
