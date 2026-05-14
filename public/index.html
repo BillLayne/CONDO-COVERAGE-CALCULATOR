@@ -332,7 +332,7 @@
             scroll-margin-top: 96px;
         }
 
-        #manual-calculator {
+        #size-check {
             scroll-margin-top: 96px;
         }
 
@@ -1341,11 +1341,11 @@
                         <span class="eyebrow"><i class="fas fa-building-shield"></i> Condo Interior Coverage Estimator</span>
                         <h1 class="hero-title">Start with photos. Get a condo coverage estimate.</h1>
                         <p class="hero-subtitle">
-                            Take room photos first. Then answer a few questions only if you want to fine tune the result.
+                            Take room photos first. Add square footage only if you want a quick size check.
                         </p>
                         <div class="hero-actions">
                             <a class="cta-btn cta-btn--primary" href="#ai-room-scan"><i class="fas fa-camera"></i>Start with photos</a>
-                            <a class="cta-btn cta-btn--secondary" href="#manual-calculator"><i class="fas fa-sliders"></i>Answer questions instead</a>
+                            <a class="cta-btn cta-btn--secondary" href="#size-check"><i class="fas fa-ruler-combined"></i>Add square footage</a>
                         </div>
                     </div>
 
@@ -1412,8 +1412,8 @@
                     <div class="workflow-step">
                         <span class="workflow-number">2</span>
                         <div>
-                            <strong>Fine tune</strong>
-                            <span>Answer questions only if you want to adjust the estimate.</span>
+                            <strong>Optional size check</strong>
+                            <span>Add square footage if you want a quick backup check.</span>
                         </div>
                     </div>
                     <div class="workflow-step">
@@ -1425,121 +1425,29 @@
                     </div>
                 </div>
                 <div class="calc-layout">
-                    <section id="manual-calculator" class="calc-card" aria-labelledby="calculator-title">
-                        <p class="section-label">Step 2 - Optional fine tune</p>
-                        <h2 id="calculator-title" class="text-4xl mt-2">Answer a few questions</h2>
+                    <section id="size-check" class="calc-card" aria-labelledby="calculator-title">
+                        <p class="section-label">Step 2 - Optional size check</p>
+                        <h2 id="calculator-title" class="text-4xl mt-2">Add square footage if you know it</h2>
                         <p class="text-slate-600 mt-3 max-w-3xl">
-                            Prefer not to use photos, or want to adjust the result? Use these simple inputs as a backup estimate.
+                            The photos do the main work. Square footage is optional and only helps keep the estimate from coming in too low.
                         </p>
 
                         <form id="condoCalculatorForm" class="form-grid mt-6" autocomplete="off">
-                            <div class="field">
-                                <label for="squareFeet">Condo square footage</label>
-                                <input id="squareFeet" name="squareFeet" type="number" min="300" max="6000" step="10" value="1200" inputmode="numeric" required>
-                                <div class="field-hint">Use the total heated living area from your listing, appraisal, or tax record.</div>
-                            </div>
-                            <div class="field">
-                                <label for="finishLevel">How nice are the inside finishes?</label>
-                                <select id="finishLevel" name="finishLevel">
-                                    <option value="builder">Basic builder-grade</option>
-                                    <option value="updated" selected>Updated and comfortable</option>
-                                    <option value="premium">High-end upgrades</option>
-                                    <option value="luxury">Luxury custom finishes</option>
-                                </select>
-                            </div>
-
-                            <div class="field">
-                                <label for="kitchenLevel">Kitchen type</label>
-                                <select id="kitchenLevel" name="kitchenLevel">
-                                    <option value="basic">Original / basic</option>
-                                    <option value="updated" selected>Updated standard</option>
-                                    <option value="premium">Stone counters or custom touches</option>
-                                    <option value="luxury">Designer custom kitchen</option>
-                                </select>
-                            </div>
-                            <div class="field">
-                                <label for="bathLevel">Bathroom type</label>
-                                <select id="bathLevel" name="bathLevel">
-                                    <option value="basic">Basic baths</option>
-                                    <option value="updated" selected>Updated baths</option>
-                                    <option value="premium">Upgraded tile and vanities</option>
-                                    <option value="luxury">Luxury spa-style baths</option>
-                                </select>
-                            </div>
-
-                            <div class="field">
-                                <label for="fullBaths">Number of full bathrooms</label>
-                                <input id="fullBaths" name="fullBaths" type="number" min="1" max="6" step="1" value="2" inputmode="numeric" required>
-                            </div>
-                            <div class="field">
-                                <label for="halfBaths">Number of half bathrooms</label>
-                                <input id="halfBaths" name="halfBaths" type="number" min="0" max="4" step="1" value="0" inputmode="numeric" required>
-                            </div>
-
-                            <div class="field">
-                                <label for="flooringLevel">Main flooring type</label>
-                                <select id="flooringLevel" name="flooringLevel">
-                                    <option value="basic">Mostly carpet / sheet vinyl</option>
-                                    <option value="mixed" selected>Mixed LVP, carpet, and standard tile</option>
-                                    <option value="hardwood">Hardwood or upgraded tile mix</option>
-                                    <option value="stone">Wide-plank hardwood and stone tile</option>
-                                </select>
-                            </div>
-                            <div class="field">
-                                <label for="applianceLevel">Appliances you own</label>
-                                <select id="applianceLevel" name="applianceLevel">
-                                    <option value="none">Not included / not sure</option>
-                                    <option value="standard" selected>Standard owner-supplied appliances</option>
-                                    <option value="stainless">Upgraded stainless package</option>
-                                    <option value="pro">Professional-grade package</option>
-                                </select>
-                            </div>
-
-                            <div class="field">
-                                <label for="builtIns">Built-ins or entertainment walls</label>
-                                <input id="builtIns" name="builtIns" type="number" min="0" max="6" step="1" value="0" inputmode="numeric">
-                            </div>
-                            <div class="field">
-                                <label for="customClosets">Custom closet systems</label>
-                                <input id="customClosets" name="customClosets" type="number" min="0" max="6" step="1" value="1" inputmode="numeric">
-                            </div>
-
-                            <div class="field">
-                                <label for="trimLevel">Trim, doors, and detail work</label>
-                                <select id="trimLevel" name="trimLevel">
-                                    <option value="basic">Basic trim package</option>
-                                    <option value="enhanced" selected>Enhanced trim and upgraded doors</option>
-                                    <option value="custom">Custom trim, beams, or feature walls</option>
-                                </select>
-                            </div>
-                            <div class="field">
-                                <label for="masterPolicy">What does the association policy cover?</label>
-                                <select id="masterPolicy" name="masterPolicy">
-                                    <option value="original">Covers some original builder-grade finishes</option>
-                                    <option value="barewalls" selected>Bare walls only</option>
-                                    <option value="unknown">Not sure yet</option>
-                                </select>
-                            </div>
-
-                            <div class="field-wide">
-                                <label for="specialFeatures">Special interior features</label>
-                                <select id="specialFeatures" name="specialFeatures">
-                                    <option value="none">No major extras</option>
-                                    <option value="laundry" selected>Laundry cabinets or added storage</option>
-                                    <option value="wetbar">Wet bar, wine storage, or beverage center</option>
-                                    <option value="multiple">Multiple upgraded custom features</option>
-                                </select>
+                            <div class="field field-wide">
+                                <label for="squareFeet">Condo square footage (optional)</label>
+                                <input id="squareFeet" name="squareFeet" type="number" min="300" max="6000" step="10" value="" placeholder="Example: 1200" inputmode="numeric">
+                                <div class="field-hint">Use heated living area from a listing, appraisal, tax record, or leave it blank.</div>
                             </div>
                         </form>
 
                         <div class="calc-actions">
-                            <button type="button" id="calculateBtn" class="pill-button pill-button--primary"><i class="fas fa-sparkles"></i>Fine tune estimate</button>
-                            <button type="button" id="resetBtn" class="pill-button pill-button--ghost"><i class="fas fa-rotate-left"></i>Refresh fields</button>
+                            <button type="button" id="updateSizeBtn" class="pill-button pill-button--primary"><i class="fas fa-ruler-combined"></i>Use square footage</button>
+                            <button type="button" id="clearSizeBtn" class="pill-button pill-button--ghost"><i class="fas fa-rotate-left"></i>Clear</button>
                         </div>
-                        <div id="manualResetStatus" class="manual-reset-status" role="status" aria-live="polite"></div>
+                        <div id="sizeCheckStatus" class="manual-reset-status" role="status" aria-live="polite"></div>
 
                         <div class="disclaimer">
-                            This estimates the inside parts of the condo, not your furniture, clothing, electronics, or jewelry. Those are reviewed under contents coverage.
+                            This estimates attached inside-condo features, not your furniture, clothing, electronics, or jewelry. Those are reviewed under contents coverage.
                         </div>
                     </section>
 
@@ -1554,14 +1462,14 @@
 
                         <div class="snapshot">
                             <div class="snapshot-card">
-                                <span class="text-sm text-slate-500">Interior rebuild estimate</span>
+                                <span class="text-sm text-slate-500">Photo or size starting estimate</span>
                                 <strong id="rebuildEstimate">$0</strong>
-                                <span class="text-slate-600">Materials and labor for inside finishes and upgrades</span>
+                                <span class="text-slate-600">Attached condo features found from photos or checked by size</span>
                             </div>
                             <div class="snapshot-card">
-                                <span class="text-sm text-slate-500">Buffer for overhead and surprises</span>
+                                <span class="text-sm text-slate-500">Coverage cushion</span>
                                 <strong id="bufferAmount">$0</strong>
-                                <span class="text-slate-600">Cleanup, contractor labor, code changes, and price movement</span>
+                                <span class="text-slate-600">Extra room for cleanup, labor, price changes, and association policy gaps</span>
                             </div>
                             <div class="snapshot-card">
                                 <span class="text-sm text-slate-500">Photo-based room scan</span>
@@ -1571,17 +1479,15 @@
                         </div>
 
                         <div class="breakdown" id="breakdownRows">
-                            <div class="breakdown-row"><span>Basic inside rebuild</span><strong>$0</strong></div>
-                            <div class="breakdown-row"><span>Kitchen and baths</span><strong>$0</strong></div>
-                            <div class="breakdown-row"><span>Flooring and fixtures</span><strong>$0</strong></div>
-                            <div class="breakdown-row"><span>Custom features</span><strong>$0</strong></div>
+                            <div class="breakdown-row"><span>Photo room subtotal</span><strong>$0</strong></div>
+                            <div class="breakdown-row"><span>Optional size check</span><strong>$0</strong></div>
                         </div>
 
                         <h3 class="text-2xl mt-6 mb-3">Why this number makes sense</h3>
                         <ul id="reasonList" class="text-slate-700 space-y-2">
-                            <li>The size and finish level of the condo drive the starting estimate.</li>
-                            <li>Kitchen, bath, flooring, and built-ins often make up the biggest inside-condo cost.</li>
-                            <li>A cushion is added because rebuild pricing after a loss is rarely exact.</li>
+                            <li>Photos help identify attached condo features like cabinets, flooring, fixtures, and built-ins.</li>
+                            <li>Square footage is optional and works only as a backup size check.</li>
+                            <li>A cushion is included because rebuild pricing after a loss is rarely exact.</li>
                         </ul>
                     </aside>
                 </div>
@@ -1679,7 +1585,7 @@
                             <div class="calc-actions">
                                 <button type="button" id="addCustomRoomBtn" class="pill-button pill-button--ghost"><i class="fas fa-plus"></i>Add custom room</button>
                                 <button type="button" id="analyzeAllRoomsBtn" class="pill-button pill-button--primary"><i class="fas fa-camera-retro"></i><span id="analyzeAllRoomsLabel">Analyze ready rooms</span></button>
-                                <a class="pill-button pill-button--ghost" href="#manual-calculator"><i class="fas fa-sliders"></i>Fine tune with questions</a>
+                                <a class="pill-button pill-button--ghost" href="#size-check"><i class="fas fa-ruler-combined"></i>Add square footage</a>
                             </div>
                             <div id="aiActionMessage" class="ai-action-message" data-tone="info" role="status" aria-live="polite"></div>
                         </section>
@@ -1768,18 +1674,9 @@
             maximumFractionDigits: 0
         });
 
-        const finishRates = { builder: 58, updated: 78, premium: 104, luxury: 138 };
-        const kitchenCosts = { basic: 12000, updated: 22000, premium: 36000, luxury: 56000 };
-        const bathCosts = { basic: 7000, updated: 12000, premium: 18500, luxury: 29000 };
-        const halfBathCosts = { basic: 3500, updated: 6000, premium: 9000, luxury: 14000 };
-        const flooringRates = { basic: 5, mixed: 8, hardwood: 14, stone: 22 };
-        const applianceCosts = { none: 0, standard: 3500, stainless: 7000, pro: 14500 };
-        const trimCosts = { basic: 0, enhanced: 5000, custom: 14000 };
-        const specialFeatureCosts = { none: 0, laundry: 3500, wetbar: 8000, multiple: 15000 };
-        const masterPolicyBuffers = { original: 0.1, barewalls: 0.18, unknown: 0.14 };
-        const closetCosts = 2400;
-        const builtInCosts = 3200;
-        let manualResetTimer = null;
+        const sizeCheckRate = 115;
+        const sizeCheckBufferRate = 0.18;
+        let sizeCheckTimer = null;
         window.condoAiState = { subtotal: 0, bufferedEstimate: 0, analyzedRooms: 0 };
 
         function roundUpToNearest(value, increment) {
@@ -1790,103 +1687,98 @@
             return currency.format(Math.max(0, Math.round(value)));
         }
 
-        function setManualResetStatus(message, autoHide = true) {
-            const status = document.getElementById("manualResetStatus");
+        function setSizeCheckStatus(message, autoHide = true) {
+            const status = document.getElementById("sizeCheckStatus");
             if (!status) return;
-            window.clearTimeout(manualResetTimer);
+            window.clearTimeout(sizeCheckTimer);
             status.textContent = message;
             status.classList.add("is-visible");
             if (autoHide) {
-                manualResetTimer = window.setTimeout(() => {
+                sizeCheckTimer = window.setTimeout(() => {
                     status.classList.remove("is-visible");
                 }, 4500);
             }
         }
 
-        function resetManualFields(showStatus = false) {
+        function resetSizeCheck(showStatus = false) {
             const form = document.getElementById("condoCalculatorForm");
             if (!form) return;
             form.reset();
             calculateCoverage();
             if (showStatus) {
-                setManualResetStatus("Manual fields refreshed to the starting values.");
+                setSizeCheckStatus("Square footage cleared. The estimate will use photo scans only.");
             }
         }
 
-        function buildReasons(inputs, recommendation, bufferAmount, aiState) {
-            const reasons = [
-                `${inputs.squareFeet.toLocaleString()} square feet with ${inputs.finishLabel.toLowerCase()} finishes creates a starting inside-rebuild estimate of ${formatMoney(inputs.baseFinish)}.`,
-                `The kitchen and bathrooms add ${formatMoney(inputs.wetAreaTotal)} because cabinets, counters, vanities, and tile are usually expensive to replace.`,
-                `A cushion of ${formatMoney(bufferAmount)} is included for cleanup, contractor labor, price changes, and association policy gaps.`
-            ];
+        function getSizeCheckEstimate(squareFeet) {
+            if (!squareFeet) {
+                return { base: 0, buffer: 0, total: 0 };
+            }
+            const base = roundUpToNearest(squareFeet * sizeCheckRate, 5000);
+            const buffer = roundUpToNearest(base * sizeCheckBufferRate, 5000);
+            return { base, buffer, total: roundUpToNearest(base + buffer, 5000) };
+        }
 
-            if (inputs.masterPolicy === "barewalls") {
-                reasons.push("You selected bare walls only, so the estimate leans higher to protect the finished inside of the condo.");
-            } else if (inputs.masterPolicy === "unknown") {
-                reasons.push("Because the association policy is not clear yet, the estimate keeps extra room until you can confirm it.");
+        function buildReasons(squareFeet, sizeCheck, aiState, finalRecommendation) {
+            const reasons = [];
+
+            if (aiState.analyzedRooms > 0) {
+                reasons.push(`The photo scan found ${formatMoney(aiState.bufferedEstimate)} across ${aiState.analyzedRooms} room${aiState.analyzedRooms === 1 ? "" : "s"} with attached condo features.`);
+            } else {
+                reasons.push("Add room photos to let the AI identify cabinets, flooring, fixtures, appliances, and built-ins.");
             }
 
-            if (recommendation >= 150000) {
-                reasons.push("This condo looks like it may need more than a small default condo coverage amount.");
+            if (squareFeet > 0) {
+                reasons.push(`${squareFeet.toLocaleString()} square feet adds a simple size check of ${formatMoney(sizeCheck.total)} so the recommendation does not rely only on photo details.`);
+            } else {
+                reasons.push("Square footage is optional. Leave it blank if the customer does not know it.");
             }
 
-            if (aiState && aiState.analyzedRooms > 0) {
-                reasons.push(`The photo scan found ${formatMoney(aiState.bufferedEstimate)} across ${aiState.analyzedRooms} room${aiState.analyzedRooms === 1 ? "" : "s"}, so the final number uses the stronger estimate.`);
+            if (finalRecommendation > 0) {
+                reasons.push("The recommendation uses the stronger of the photo scan and the optional size check, then keeps room for rebuild price changes.");
+            } else {
+                reasons.push("Once photos are analyzed, this area will show a practical starting point for inside-condo coverage.");
             }
 
             return reasons;
         }
 
         function calculateCoverage() {
-            const data = new FormData(document.getElementById("condoCalculatorForm"));
-            const squareFeet = Number(data.get("squareFeet")) || 0;
-            const finishLevel = data.get("finishLevel");
-            const kitchenLevel = data.get("kitchenLevel");
-            const bathLevel = data.get("bathLevel");
-            const fullBaths = Number(data.get("fullBaths")) || 0;
-            const halfBaths = Number(data.get("halfBaths")) || 0;
-            const flooringLevel = data.get("flooringLevel");
-            const applianceLevel = data.get("applianceLevel");
-            const builtIns = Number(data.get("builtIns")) || 0;
-            const customClosets = Number(data.get("customClosets")) || 0;
-            const trimLevel = data.get("trimLevel");
-            const masterPolicy = data.get("masterPolicy");
-            const specialFeatures = data.get("specialFeatures");
-            const finishLabel = document.getElementById("finishLevel").selectedOptions[0].text;
-
-            const baseFinish = squareFeet * finishRates[finishLevel];
-            const wetAreaTotal = kitchenCosts[kitchenLevel] + (fullBaths * bathCosts[bathLevel]) + (halfBaths * halfBathCosts[bathLevel]);
-            const flooringAndFixtures = (squareFeet * flooringRates[flooringLevel]) + applianceCosts[applianceLevel] + trimCosts[trimLevel];
-            const customFeatures = (builtIns * builtInCosts) + (customClosets * closetCosts) + specialFeatureCosts[specialFeatures];
-            const directRebuild = baseFinish + wetAreaTotal + flooringAndFixtures + customFeatures;
-            const bufferAmount = (directRebuild * 0.12) + (directRebuild * 0.1) + (directRebuild * masterPolicyBuffers[masterPolicy]);
-            const manualRecommendation = roundUpToNearest(Math.max(directRebuild + bufferAmount, 35000), 5000);
             const aiState = window.condoAiState || { subtotal: 0, bufferedEstimate: 0, analyzedRooms: 0 };
-            const finalRecommendation = Math.max(manualRecommendation, aiState.bufferedEstimate || 0);
-            const lowRange = roundUpToNearest(finalRecommendation * 0.9, 5000);
-            const highRange = roundUpToNearest(finalRecommendation * 1.1, 5000);
+            const squareFeet = Number(document.getElementById("squareFeet")?.value) || 0;
+            const sizeCheck = getSizeCheckEstimate(squareFeet);
+            const photoEstimate = aiState.bufferedEstimate || 0;
+            const finalRecommendation = Math.max(photoEstimate, sizeCheck.total);
+            const lowRange = finalRecommendation > 0 ? roundUpToNearest(finalRecommendation * 0.9, 5000) : 0;
+            const highRange = finalRecommendation > 0 ? roundUpToNearest(finalRecommendation * 1.1, 5000) : 0;
+            const startingEstimate = Math.max(aiState.subtotal || 0, sizeCheck.base);
+            const bufferAmount = Math.max(0, finalRecommendation - startingEstimate);
 
             document.getElementById("recommendedCoverage").textContent = formatMoney(finalRecommendation);
             document.getElementById("coverageRange").innerHTML = `<i class="fas fa-arrows-left-right"></i>Estimated range: ${formatMoney(lowRange)} - ${formatMoney(highRange)}`;
-            document.getElementById("coverageNarrative").textContent = aiState.analyzedRooms > 0
-                ? `The form estimate is ${formatMoney(manualRecommendation)} and the photo scan estimate is ${formatMoney(aiState.bufferedEstimate)}. To stay on the safe side, this condo points to about ${formatMoney(finalRecommendation)} of inside-condo coverage.`
-                : `A practical starting point for this condo is about ${formatMoney(finalRecommendation)} of inside-condo coverage. Similar condos may land between ${formatMoney(lowRange)} and ${formatMoney(highRange)}, depending on finish quality and the association policy.`;
-            document.getElementById("rebuildEstimate").textContent = formatMoney(directRebuild);
+            if (aiState.analyzedRooms > 0 && squareFeet > 0) {
+                document.getElementById("coverageNarrative").textContent = `The photo scan estimate is ${formatMoney(photoEstimate)} and the square-footage check is ${formatMoney(sizeCheck.total)}. To stay practical, this uses the stronger number as the starting point.`;
+            } else if (aiState.analyzedRooms > 0) {
+                document.getElementById("coverageNarrative").textContent = `Based on the analyzed room photos, this condo points to about ${formatMoney(finalRecommendation)} of inside-condo coverage before an agent reviews the association policy.`;
+            } else if (squareFeet > 0) {
+                document.getElementById("coverageNarrative").textContent = `Without room photos yet, ${squareFeet.toLocaleString()} square feet gives a simple size-only starting point of about ${formatMoney(finalRecommendation)}. Photos will make this more useful.`;
+            } else {
+                document.getElementById("coverageNarrative").textContent = "Start with room photos. Add square footage only if you know it and want a backup size check.";
+            }
+            document.getElementById("rebuildEstimate").textContent = formatMoney(startingEstimate);
             document.getElementById("bufferAmount").textContent = formatMoney(bufferAmount);
-            document.getElementById("photoEstimate").textContent = formatMoney(aiState.bufferedEstimate || 0);
+            document.getElementById("photoEstimate").textContent = formatMoney(photoEstimate);
             document.getElementById("photoEstimateDetail").textContent = aiState.analyzedRooms > 0
                 ? `${aiState.analyzedRooms} room${aiState.analyzedRooms === 1 ? "" : "s"} analyzed from photos`
                 : "No room photos analyzed yet";
 
             const breakdownRows = [
-                ["Basic inside rebuild", baseFinish],
-                ["Kitchen and baths", wetAreaTotal],
-                ["Flooring and fixtures", flooringAndFixtures],
-                ["Custom features", customFeatures]
+                ["Photo room subtotal", aiState.subtotal || 0],
+                ["Photo room estimate with cushion", photoEstimate]
             ];
 
-            if (aiState.analyzedRooms > 0) {
-                breakdownRows.push(["Photo scan check", aiState.bufferedEstimate]);
+            if (squareFeet > 0) {
+                breakdownRows.push(["Optional square-foot check", sizeCheck.total]);
             }
 
             document.getElementById("breakdownRows").innerHTML = breakdownRows.map(([label, value]) => `
@@ -1896,7 +1788,7 @@
                 </div>
             `).join("");
 
-            const reasons = buildReasons({ squareFeet, finishLabel, baseFinish, wetAreaTotal, masterPolicy }, finalRecommendation, bufferAmount, aiState);
+            const reasons = buildReasons(squareFeet, sizeCheck, aiState, finalRecommendation);
             document.getElementById("reasonList").innerHTML = reasons.map((reason) => `<li>${reason}</li>`).join("");
         }
 
@@ -1911,13 +1803,15 @@
             resultsCard.scrollIntoView({ behavior: "smooth", block: "start" });
         }
 
-        document.getElementById("calculateBtn").addEventListener("click", function() {
+        document.getElementById("updateSizeBtn").addEventListener("click", function() {
             calculateCoverage();
             revealResults();
+            setSizeCheckStatus("Square footage check updated.");
         });
-        document.getElementById("resetBtn").addEventListener("click", function() {
-            resetManualFields(true);
+        document.getElementById("clearSizeBtn").addEventListener("click", function() {
+            resetSizeCheck(true);
         });
+        document.getElementById("squareFeet").addEventListener("input", calculateCoverage);
         document.addEventListener("DOMContentLoaded", function() {
             window.addEventListener("scroll", function() {
                 const header = document.getElementById("main-header");
@@ -1928,12 +1822,12 @@
                 }
             });
 
-            resetManualFields(false);
+            resetSizeCheck(false);
         });
 
         window.addEventListener("pageshow", function(event) {
             if (event.persisted) {
-                resetManualFields(false);
+                resetSizeCheck(false);
             }
         });
     </script>
@@ -2198,31 +2092,19 @@
         }
 
         function computeBufferedPhotoEstimate(subtotal) {
-            const masterPolicy = document.getElementById("masterPolicy")?.value || "unknown";
             const contingency = subtotal * 0.12;
-            const policyGap = subtotal * (masterPolicy === "barewalls" ? 0.1 : masterPolicy === "unknown" ? 0.07 : 0.04);
+            const policyGap = subtotal * 0.1;
             return Math.ceil((subtotal + contingency + policyGap) / 5000) * 5000;
         }
 
         function summarizeSelectedOptions() {
             const squareFeet = document.getElementById("squareFeet")?.value || "";
-            const finish = document.getElementById("finishLevel");
-            const kitchen = document.getElementById("kitchenQuality");
-            const baths = document.getElementById("bathCount");
-            const flooring = document.getElementById("flooringType");
-            const custom = document.getElementById("customFeatures");
-            const appliances = document.getElementById("ownerAppliances");
-            const masterPolicy = document.getElementById("masterPolicy");
+            const aiRooms = document.getElementById("aiRoomsAnalyzed")?.textContent?.trim() || "0";
 
             return [
-                ["Condo size", squareFeet ? `${squareFeet} sq ft` : "Not entered"],
-                ["Finish level", finish?.selectedOptions?.[0]?.textContent?.trim() || "Not selected"],
-                ["Kitchen quality", kitchen?.selectedOptions?.[0]?.textContent?.trim() || "Not selected"],
-                ["Bathrooms", baths?.selectedOptions?.[0]?.textContent?.trim() || "Not selected"],
-                ["Flooring", flooring?.selectedOptions?.[0]?.textContent?.trim() || "Not selected"],
-                ["Custom features", custom?.selectedOptions?.[0]?.textContent?.trim() || "Not selected"],
-                ["Owner appliances", appliances?.selectedOptions?.[0]?.textContent?.trim() || "Not selected"],
-                ["Association master policy", masterPolicy?.selectedOptions?.[0]?.textContent?.trim() || "Not selected"]
+                ["Photo rooms analyzed", aiRooms],
+                ["Optional condo size", squareFeet ? `${squareFeet} sq ft` : "Not entered"],
+                ["Association master policy", "Customer should verify bare walls, single entity, or all-in coverage"]
             ];
         }
 
@@ -3138,7 +3020,7 @@
             document.getElementById("aiRoomBuffered").textContent = formatMoney(bufferedEstimate);
             document.getElementById("aiRoomsAnalyzed").textContent = String(analyzedRooms.length);
             document.getElementById("aiSummaryNote").textContent = analyzedRooms.length > 0
-                ? `Compared against the manual calculator to keep the stronger coverage limit`
+                ? `Compared against the optional square-foot check to keep the stronger coverage limit`
                 : "Add photos to each room you want included";
 
             window.condoAiState = { subtotal, bufferedEstimate, analyzedRooms: analyzedRooms.length };
