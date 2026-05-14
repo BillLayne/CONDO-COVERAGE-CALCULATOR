@@ -16,7 +16,8 @@
       })(window, document, "clarity", "script", "vo5s3jhhub");
     </script>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#003f87">
     <title>Condo Interior Insurance Calculator | Bill Layne Insurance</title>
     <meta name="title" content="Condo Interior Insurance Calculator | Bill Layne Insurance">
     <meta name="description" content="Estimate how much condo interior coverage to carry on your HO-6 policy for cabinets, flooring, counters, fixtures, bathrooms, and built-ins.">
@@ -72,8 +73,14 @@
     </script>
     <style>
         :root {
-            --navy: #102542;
-            --blue: #1d4ed8;
+            --navy: #003f87;
+            --navy-dark: #002659;
+            --blue: #0076d3;
+            --blue-soft: #e6effa;
+            --gold: #fbbf24;
+            --gold-soft: #fff8e6;
+            --success: #047857;
+            --danger: #b91c1c;
             --ink: #0f172a;
             --muted: #475569;
             --line: rgba(15, 23, 42, 0.12);
@@ -93,7 +100,7 @@
             font-family: "DM Sans", system-ui, sans-serif;
             color: var(--ink);
             background:
-                radial-gradient(circle at top left, rgba(59, 130, 246, 0.18), transparent 32%),
+                radial-gradient(circle at top left, rgba(0, 118, 211, 0.18), transparent 32%),
                 linear-gradient(180deg, #eef5ff 0%, #f7fafc 38%, #eef2f7 100%);
         }
 
@@ -219,7 +226,7 @@
         .hero-panel {
             border-radius: 32px;
             padding: 1.5rem;
-            background: linear-gradient(165deg, rgba(16, 37, 66, 0.97), rgba(29, 78, 216, 0.94));
+            background: linear-gradient(165deg, rgba(0, 63, 135, 0.98), rgba(0, 118, 211, 0.94));
             color: white;
             overflow: hidden;
         }
@@ -275,8 +282,9 @@
         }
 
         .cta-btn--primary {
-            background: linear-gradient(135deg, #1d4ed8, #2563eb);
+            background: linear-gradient(135deg, var(--blue), var(--navy));
             color: white;
+            box-shadow: 0 12px 26px rgba(0, 63, 135, 0.22);
         }
 
         .cta-btn--secondary {
@@ -428,8 +436,9 @@
         }
 
         .pill-button--primary {
-            background: linear-gradient(135deg, #0f172a, #1d4ed8);
+            background: linear-gradient(135deg, var(--blue), var(--navy));
             color: white;
+            box-shadow: 0 12px 24px rgba(0, 63, 135, 0.18);
         }
 
         .pill-button--ghost {
@@ -461,6 +470,18 @@
         .results-card {
             position: sticky;
             top: 102px;
+            scroll-margin-top: 96px;
+        }
+
+        .results-card--highlight {
+            animation: resultPulse 1.5s ease;
+            border-color: rgba(0, 118, 211, 0.45);
+        }
+
+        @keyframes resultPulse {
+            0% { box-shadow: 0 0 0 0 rgba(0, 118, 211, 0.32), 0 20px 60px rgba(15, 23, 42, 0.09); }
+            65% { box-shadow: 0 0 0 16px rgba(0, 118, 211, 0), 0 22px 64px rgba(0, 63, 135, 0.18); }
+            100% { box-shadow: 0 20px 60px rgba(15, 23, 42, 0.09); }
         }
 
         .result-amount {
@@ -511,6 +532,26 @@
             background: rgba(255, 247, 237, 0.95);
             border: 1px solid rgba(245, 158, 11, 0.24);
             color: #92400e;
+        }
+
+        .trust-line {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.55rem;
+            margin-top: 1rem;
+            padding: 0.85rem 1rem;
+            border-radius: 18px;
+            background: var(--blue-soft);
+            border: 1px solid rgba(0, 118, 211, 0.16);
+            color: var(--navy);
+            font-size: 0.95rem;
+            line-height: 1.45;
+            font-weight: 600;
+        }
+
+        .trust-line i {
+            margin-top: 0.2rem;
+            color: var(--success);
         }
 
         .footer {
@@ -593,21 +634,27 @@
             font-weight: 700;
             background: rgba(241, 245, 249, 0.95);
             color: #475569;
+            white-space: nowrap;
         }
 
         .room-status[data-state="processing"] {
             background: rgba(219, 234, 254, 0.95);
-            color: #1d4ed8;
+            color: var(--navy);
         }
 
         .room-status[data-state="done"] {
             background: rgba(220, 252, 231, 0.95);
-            color: #166534;
+            color: var(--success);
+        }
+
+        .room-status[data-state="has-photos"] {
+            background: rgba(230, 239, 250, 0.95);
+            color: var(--navy);
         }
 
         .room-status[data-state="error"] {
             background: rgba(254, 226, 226, 0.95);
-            color: #b91c1c;
+            color: var(--danger);
         }
 
         .upload-zone {
@@ -642,7 +689,7 @@
         }
 
         .upload-label--camera {
-            background: linear-gradient(135deg, #1d4ed8, #2563eb);
+            background: linear-gradient(135deg, var(--blue), var(--navy));
             color: white;
             border-color: transparent;
         }
@@ -945,10 +992,10 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="hero-grid">
                     <div class="hero-copy">
-                        <span class="eyebrow"><i class="fas fa-building-shield"></i> HO-6 Interior Coverage Estimator</span>
-                        <h1 class="hero-title">Figure out how much of your condo interior needs to be insured.</h1>
+                        <span class="eyebrow"><i class="fas fa-building-shield"></i> Condo Interior Coverage Estimator</span>
+                        <h1 class="hero-title">Estimate the inside coverage your condo may need.</h1>
                         <p class="hero-subtitle">
-                            In many condos, the association insures the exterior and common areas while the unit owner is responsible for the inside finishes and improvements. This calculator estimates the coverage needed for cabinets, counters, flooring, paint, fixtures, bathrooms, appliances, and built-ins.
+                            Your condo association may cover the outside building, but you may need coverage for the inside: cabinets, counters, flooring, paint, fixtures, appliances, and built-ins.
                         </p>
                         <div class="hero-actions">
                             <a class="cta-btn cta-btn--primary" href="#calculator"><i class="fas fa-calculator"></i>Start the estimate</a>
@@ -983,19 +1030,19 @@
                 <div class="info-strip">
                     <div class="info-grid">
                         <div class="info-block">
-                            <p class="section-label">Usually association</p>
-                            <h3 class="text-2xl mt-2 mb-2">Roof, structure, exterior, halls</h3>
-                            <p class="text-slate-600">The master policy commonly handles the outside shell and shared areas.</p>
+                            <p class="section-label">Often association</p>
+                            <h3 class="text-2xl mt-2 mb-2">Roof, outside walls, halls</h3>
+                            <p class="text-slate-600">The condo association policy often handles the building shell and shared areas.</p>
                         </div>
                         <div class="info-block">
-                            <p class="section-label">Usually unit owner</p>
-                            <h3 class="text-2xl mt-2 mb-2">Walls-in finishes and upgrades</h3>
-                            <p class="text-slate-600">The HO-6 often needs to protect what makes your unit livable and finished inside.</p>
+                            <p class="section-label">Often you</p>
+                            <h3 class="text-2xl mt-2 mb-2">Inside finishes and upgrades</h3>
+                            <p class="text-slate-600">Your condo policy often needs to protect what makes the unit finished and livable.</p>
                         </div>
                         <div class="info-block">
                             <p class="section-label">Always confirm</p>
-                            <h3 class="text-2xl mt-2 mb-2">Bylaws and master policy wording</h3>
-                            <p class="text-slate-600">Some associations cover original finishes only, while others stop at bare walls.</p>
+                            <h3 class="text-2xl mt-2 mb-2">Your association policy</h3>
+                            <p class="text-slate-600">Some associations cover original finishes. Others stop at bare walls.</p>
                         </div>
                     </div>
                 </div>
@@ -1007,42 +1054,42 @@
                 <div class="calc-layout">
                     <section class="calc-card" aria-labelledby="calculator-title">
                         <p class="section-label">Calculator</p>
-                        <h2 id="calculator-title" class="text-4xl mt-2">Condo interior coverage calculator</h2>
+                        <h2 id="calculator-title" class="text-4xl mt-2">Condo inside-coverage calculator</h2>
                         <p class="text-slate-600 mt-3 max-w-3xl">
-                            Enter the size of the condo and the quality of finishes inside the unit. We use those details to estimate rebuild cost, then add room for demolition, contractor overhead, and a safety buffer.
+                            Answer a few simple questions about your condo. The calculator estimates what it may cost to rebuild the inside, then adds a cushion for cleanup, labor, and price changes.
                         </p>
 
                         <form id="condoCalculatorForm" class="form-grid mt-6">
                             <div class="field">
                                 <label for="squareFeet">Condo square footage</label>
                                 <input id="squareFeet" name="squareFeet" type="number" min="300" max="6000" step="10" value="1200" inputmode="numeric" required>
-                                <div class="field-hint">Bedrooms, halls, closets, and living areas are already covered through total square footage.</div>
+                                <div class="field-hint">Use the total heated living area from your listing, appraisal, or tax record.</div>
                             </div>
                             <div class="field">
-                                <label for="finishLevel">Overall finish level</label>
+                                <label for="finishLevel">How nice are the inside finishes?</label>
                                 <select id="finishLevel" name="finishLevel">
-                                    <option value="builder">Builder grade</option>
-                                    <option value="updated" selected>Updated mid-grade</option>
-                                    <option value="premium">Premium upgrades</option>
-                                    <option value="luxury">Luxury custom</option>
+                                    <option value="builder">Basic builder-grade</option>
+                                    <option value="updated" selected>Updated and comfortable</option>
+                                    <option value="premium">High-end upgrades</option>
+                                    <option value="luxury">Luxury custom finishes</option>
                                 </select>
                             </div>
 
                             <div class="field">
-                                <label for="kitchenLevel">Kitchen quality</label>
+                                <label for="kitchenLevel">Kitchen type</label>
                                 <select id="kitchenLevel" name="kitchenLevel">
                                     <option value="basic">Original / basic</option>
                                     <option value="updated" selected>Updated standard</option>
-                                    <option value="premium">Premium stone and custom touches</option>
+                                    <option value="premium">Stone counters or custom touches</option>
                                     <option value="luxury">Designer custom kitchen</option>
                                 </select>
                             </div>
                             <div class="field">
-                                <label for="bathLevel">Bathroom quality</label>
+                                <label for="bathLevel">Bathroom type</label>
                                 <select id="bathLevel" name="bathLevel">
                                     <option value="basic">Basic baths</option>
                                     <option value="updated" selected>Updated baths</option>
-                                    <option value="premium">Premium tile and vanities</option>
+                                    <option value="premium">Upgraded tile and vanities</option>
                                     <option value="luxury">Luxury spa-style baths</option>
                                 </select>
                             </div>
@@ -1057,7 +1104,7 @@
                             </div>
 
                             <div class="field">
-                                <label for="flooringLevel">Primary flooring package</label>
+                                <label for="flooringLevel">Main flooring type</label>
                                 <select id="flooringLevel" name="flooringLevel">
                                     <option value="basic">Mostly carpet / sheet vinyl</option>
                                     <option value="mixed" selected>Mixed LVP, carpet, and standard tile</option>
@@ -1066,9 +1113,9 @@
                                 </select>
                             </div>
                             <div class="field">
-                                <label for="applianceLevel">Appliance package</label>
+                                <label for="applianceLevel">Appliances you own</label>
                                 <select id="applianceLevel" name="applianceLevel">
-                                    <option value="none">Association or landlord handled</option>
+                                    <option value="none">Not included / not sure</option>
                                     <option value="standard" selected>Standard owner-supplied appliances</option>
                                     <option value="stainless">Upgraded stainless package</option>
                                     <option value="pro">Professional-grade package</option>
@@ -1076,7 +1123,7 @@
                             </div>
 
                             <div class="field">
-                                <label for="builtIns">Custom built-ins or entertainment walls</label>
+                                <label for="builtIns">Built-ins or entertainment walls</label>
                                 <input id="builtIns" name="builtIns" type="number" min="0" max="6" step="1" value="0" inputmode="numeric">
                             </div>
                             <div class="field">
@@ -1085,15 +1132,15 @@
                             </div>
 
                             <div class="field">
-                                <label for="trimLevel">Trim and millwork detail</label>
+                                <label for="trimLevel">Trim, doors, and detail work</label>
                                 <select id="trimLevel" name="trimLevel">
                                     <option value="basic">Basic trim package</option>
                                     <option value="enhanced" selected>Enhanced trim and upgraded doors</option>
-                                    <option value="custom">Custom millwork, beams, or feature walls</option>
+                                    <option value="custom">Custom trim, beams, or feature walls</option>
                                 </select>
                             </div>
                             <div class="field">
-                                <label for="masterPolicy">Association master policy setup</label>
+                                <label for="masterPolicy">What does the association policy cover?</label>
                                 <select id="masterPolicy" name="masterPolicy">
                                     <option value="original">Covers some original builder-grade finishes</option>
                                     <option value="barewalls" selected>Bare walls only</option>
@@ -1118,29 +1165,29 @@
                         </div>
 
                         <div class="disclaimer">
-                            This estimate is for interior dwelling coverage on a condo policy, not personal property. Electronics, clothing, furniture, and jewelry still need their own contents coverage review.
+                            This estimates the inside parts of the condo, not your furniture, clothing, electronics, or jewelry. Those are reviewed under contents coverage.
                         </div>
                     </section>
 
                     <aside class="results-card" aria-live="polite">
                         <p class="section-label">Recommended amount</p>
-                        <h2 class="text-3xl mt-2">Suggested Coverage A limit</h2>
+                        <h2 class="text-3xl mt-2">Suggested inside-condo coverage</h2>
                         <div class="result-amount" id="recommendedCoverage">$0</div>
                         <div class="range-chip" id="coverageRange"><i class="fas fa-arrows-left-right"></i>Estimated range: $0 - $0</div>
                         <p class="text-slate-600 mt-3" id="coverageNarrative">
-                            Start the calculator to estimate how much of the condo interior the owner should insure.
+                            Start the calculator to estimate how much inside-condo coverage may make sense.
                         </p>
 
                         <div class="snapshot">
                             <div class="snapshot-card">
                                 <span class="text-sm text-slate-500">Interior rebuild estimate</span>
                                 <strong id="rebuildEstimate">$0</strong>
-                                <span class="text-slate-600">Materials and labor for walls-in finishes and improvements</span>
+                                <span class="text-slate-600">Materials and labor for inside finishes and upgrades</span>
                             </div>
                             <div class="snapshot-card">
                                 <span class="text-sm text-slate-500">Buffer for overhead and surprises</span>
                                 <strong id="bufferAmount">$0</strong>
-                                <span class="text-slate-600">Demolition, contractor overhead, code drift, and price movement</span>
+                                <span class="text-slate-600">Cleanup, contractor labor, code changes, and price movement</span>
                             </div>
                             <div class="snapshot-card">
                                 <span class="text-sm text-slate-500">Photo-based room scan</span>
@@ -1150,7 +1197,7 @@
                         </div>
 
                         <div class="breakdown" id="breakdownRows">
-                            <div class="breakdown-row"><span>Base finish rebuild</span><strong>$0</strong></div>
+                            <div class="breakdown-row"><span>Basic inside rebuild</span><strong>$0</strong></div>
                             <div class="breakdown-row"><span>Kitchen and baths</span><strong>$0</strong></div>
                             <div class="breakdown-row"><span>Flooring and fixtures</span><strong>$0</strong></div>
                             <div class="breakdown-row"><span>Custom features</span><strong>$0</strong></div>
@@ -1159,7 +1206,7 @@
                         <h3 class="text-2xl mt-6 mb-3">Why this number makes sense</h3>
                         <ul id="reasonList" class="text-slate-700 space-y-2">
                             <li>The size and finish level of the condo drive the starting estimate.</li>
-                            <li>Kitchen, bath, flooring, and built-ins often make up the biggest walls-in cost.</li>
+                            <li>Kitchen, bath, flooring, and built-ins often make up the biggest inside-condo cost.</li>
                             <li>A cushion is added because rebuild pricing after a loss is rarely exact.</li>
                         </ul>
                     </aside>
@@ -1171,16 +1218,16 @@
                     <div class="grid md:grid-cols-2 gap-6">
                         <div>
                             <ul class="space-y-3 text-slate-700">
-                                <li>Does the master policy stop at bare walls, or does it include original cabinets and fixtures?</li>
-                                <li>Would a loss assessment from the association need separate coverage?</li>
-                                <li>Have you made upgrades since buying the condo that exceed the original builder finish?</li>
+                                <li>Does the association policy stop at bare walls, or does it include original cabinets and fixtures?</li>
+                                <li>Could the association charge you after a large shared loss?</li>
+                                <li>Have you upgraded the condo since buying it?</li>
                             </ul>
                         </div>
                         <div>
                             <ul class="space-y-3 text-slate-700">
-                                <li>Are appliances, flooring, and custom closets your responsibility under the bylaws?</li>
-                                <li>Would code upgrades or debris removal increase the rebuild cost after a major water or fire loss?</li>
-                                <li>Do you also need enough contents, liability, and water backup protection on the policy?</li>
+                                <li>Are appliances, flooring, and custom closets your responsibility?</li>
+                                <li>Could cleanup, code upgrades, or higher labor costs raise the repair bill?</li>
+                                <li>Do you also have enough contents, liability, and water backup coverage?</li>
                             </ul>
                         </div>
                     </div>
@@ -1196,10 +1243,11 @@
                     <div class="ai-overview">
                         <section class="ai-panel">
                             <p class="section-label">AI Room Scan</p>
-                            <h2 class="text-3xl mt-2">Upload room photos and let AI estimate fixtures, finishes, and built-ins.</h2>
+                            <h2 class="text-3xl mt-2">Upload room photos to estimate attached condo features.</h2>
                             <p class="text-slate-600 mt-3">
-                                This follows the same photo workflow as your contents inventory tool, but the AI is focused on condo walls-in property. It looks for cabinets, countertops, vanities, flooring, trim, paint, lighting, plumbing fixtures, owner appliances, and other attached improvements. Personal property is intentionally ignored.
+                                Add clear photos of each room. The AI looks for attached items like cabinets, counters, vanities, flooring, trim, lighting, plumbing fixtures, appliances, and built-ins. It ignores furniture and personal belongings.
                             </p>
+                            <div class="trust-line"><i class="fas fa-lock"></i><span>Your photos stay private and are used only to estimate attached condo features.</span></div>
                             <p class="text-slate-500 mt-3 text-sm">
                                 iPhone HEIC and HEIF photos are accepted and converted automatically before analysis.
                             </p>
@@ -1239,7 +1287,7 @@
     </main>
 
     <footer class="footer">
-        <p>&copy; 2026 Bill Layne Insurance. This calculator is an estimate and should be reviewed alongside your condo bylaws and master policy.</p>
+        <p>&copy; 2026 Bill Layne Insurance. This calculator is an estimate and should be reviewed alongside your condo association policy.</p>
     </footer>
 
     <div class="dock-spacer md:hidden" style="height: 72px;"></div>
@@ -1248,8 +1296,8 @@
         <a href="tel:3368351993" class="dock-btn dock-call">
             <i class="fas fa-phone-alt"></i> Call
         </a>
-        <a href="https://billlayneinsurance.com/get-quote" class="dock-btn dock-quote">
-            <i class="fas fa-bolt"></i> Compare Rates
+        <a href="#calculator" class="dock-btn dock-quote">
+            <i class="fas fa-calculator"></i> Calculate Coverage
         </a>
         <button class="dock-btn dock-menu" onclick="toggleMobileDockMenu()">
             <i class="fas fa-bars"></i> Menu
@@ -1302,23 +1350,23 @@
 
         function buildReasons(inputs, recommendation, bufferAmount, aiState) {
             const reasons = [
-                `${inputs.squareFeet.toLocaleString()} square feet at a ${inputs.finishLabel.toLowerCase()} finish level creates a base rebuild estimate of ${formatMoney(inputs.baseFinish)}.`,
-                `Kitchen and bath finishes add ${formatMoney(inputs.wetAreaTotal)} because cabinetry, counters, vanities, and tile drive condo interior cost fast.`,
-                `A buffer of ${formatMoney(bufferAmount)} is included for demolition, contractor overhead, price swings, and master policy gaps.`
+                `${inputs.squareFeet.toLocaleString()} square feet with ${inputs.finishLabel.toLowerCase()} finishes creates a starting inside-rebuild estimate of ${formatMoney(inputs.baseFinish)}.`,
+                `The kitchen and bathrooms add ${formatMoney(inputs.wetAreaTotal)} because cabinets, counters, vanities, and tile are usually expensive to replace.`,
+                `A cushion of ${formatMoney(bufferAmount)} is included for cleanup, contractor labor, price changes, and association policy gaps.`
             ];
 
             if (inputs.masterPolicy === "barewalls") {
-                reasons.push("The master policy was marked bare walls only, so the recommendation leans higher to protect drywall-in finishes and upgrades.");
+                reasons.push("You selected bare walls only, so the estimate leans higher to protect the finished inside of the condo.");
             } else if (inputs.masterPolicy === "unknown") {
-                reasons.push("Because the master policy details are still unclear, the recommendation keeps extra room until the bylaws are confirmed.");
+                reasons.push("Because the association policy is not clear yet, the estimate keeps extra room until you can confirm it.");
             }
 
             if (recommendation >= 150000) {
-                reasons.push("This unit profile supports carrying a stronger HO-6 dwelling limit instead of relying on a minimal default amount.");
+                reasons.push("This condo looks like it may need more than a small default condo coverage amount.");
             }
 
             if (aiState && aiState.analyzedRooms > 0) {
-                reasons.push(`AI photo analysis produced ${formatMoney(aiState.bufferedEstimate)} across ${aiState.analyzedRooms} room${aiState.analyzedRooms === 1 ? "" : "s"}, so the final recommendation compares both methods and keeps the stronger limit.`);
+                reasons.push(`The photo scan found ${formatMoney(aiState.bufferedEstimate)} across ${aiState.analyzedRooms} room${aiState.analyzedRooms === 1 ? "" : "s"}, so the final number uses the stronger estimate.`);
             }
 
             return reasons;
@@ -1356,8 +1404,8 @@
             document.getElementById("recommendedCoverage").textContent = formatMoney(finalRecommendation);
             document.getElementById("coverageRange").innerHTML = `<i class="fas fa-arrows-left-right"></i>Estimated range: ${formatMoney(lowRange)} - ${formatMoney(highRange)}`;
             document.getElementById("coverageNarrative").textContent = aiState.analyzedRooms > 0
-                ? `The manual estimator suggests ${formatMoney(manualRecommendation)} and the photo-based room scan suggests ${formatMoney(aiState.bufferedEstimate)}. To stay on the safe side, this condo currently points to about ${formatMoney(finalRecommendation)} of interior dwelling coverage.`
-                : `A practical starting point for this condo is about ${formatMoney(finalRecommendation)} of interior dwelling coverage, with most similar units landing between ${formatMoney(lowRange)} and ${formatMoney(highRange)} once finish quality and master policy wording are considered.`;
+                ? `The form estimate is ${formatMoney(manualRecommendation)} and the photo scan estimate is ${formatMoney(aiState.bufferedEstimate)}. To stay on the safe side, this condo points to about ${formatMoney(finalRecommendation)} of inside-condo coverage.`
+                : `A practical starting point for this condo is about ${formatMoney(finalRecommendation)} of inside-condo coverage. Similar condos may land between ${formatMoney(lowRange)} and ${formatMoney(highRange)}, depending on finish quality and the association policy.`;
             document.getElementById("rebuildEstimate").textContent = formatMoney(directRebuild);
             document.getElementById("bufferAmount").textContent = formatMoney(bufferAmount);
             document.getElementById("photoEstimate").textContent = formatMoney(aiState.bufferedEstimate || 0);
@@ -1366,14 +1414,14 @@
                 : "No room photos analyzed yet";
 
             const breakdownRows = [
-                ["Base finish rebuild", baseFinish],
+                ["Basic inside rebuild", baseFinish],
                 ["Kitchen and baths", wetAreaTotal],
                 ["Flooring and fixtures", flooringAndFixtures],
                 ["Custom features", customFeatures]
             ];
 
             if (aiState.analyzedRooms > 0) {
-                breakdownRows.push(["Photo-based room scan check", aiState.bufferedEstimate]);
+                breakdownRows.push(["Photo scan check", aiState.bufferedEstimate]);
             }
 
             document.getElementById("breakdownRows").innerHTML = breakdownRows.map(([label, value]) => `
@@ -1389,7 +1437,19 @@
 
         window.recalculateCondoCoverage = calculateCoverage;
 
-        document.getElementById("calculateBtn").addEventListener("click", calculateCoverage);
+        function revealResults() {
+            const resultsCard = document.querySelector(".results-card");
+            if (!resultsCard) return;
+            resultsCard.classList.remove("results-card--highlight");
+            void resultsCard.offsetWidth;
+            resultsCard.classList.add("results-card--highlight");
+            resultsCard.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+
+        document.getElementById("calculateBtn").addEventListener("click", function() {
+            calculateCoverage();
+            revealResults();
+        });
         document.getElementById("resetBtn").addEventListener("click", function() {
             document.getElementById("condoCalculatorForm").reset();
             calculateCoverage();
@@ -2549,6 +2609,25 @@
             if (!grid) return;
 
             grid.innerHTML = roomState.rooms.map((room) => {
+                const displayStatus = room.status === "idle" && room.images.length > 0 ? "has-photos" : room.status;
+                const statusIcon = displayStatus === "processing"
+                    ? "fa-spinner fa-spin"
+                    : displayStatus === "done"
+                        ? "fa-circle-check"
+                        : displayStatus === "error"
+                            ? "fa-triangle-exclamation"
+                            : displayStatus === "has-photos"
+                                ? "fa-circle-check"
+                                : "fa-camera";
+                const statusText = displayStatus === "processing"
+                    ? "Checking photos"
+                    : displayStatus === "done"
+                        ? "Estimate ready"
+                        : displayStatus === "error"
+                            ? "Try again"
+                            : displayStatus === "has-photos"
+                                ? "Ready to estimate"
+                                : "No photos yet";
                 const thumbs = room.images.map((image, index) => `
                     <div class="thumb">
                         <img src="data:${escapeHtml(image.mimeType || "image/jpeg")};base64,${image.data}" alt="${escapeHtml(room.name)} photo ${index + 1}">
@@ -2568,7 +2647,12 @@
                             <strong>${formatMoney(component.estimatedValue)}</strong>
                         </div>
                     `).join("")}</div>`
-                    : `<div class="ai-empty">${room.status === "error" ? escapeHtml(room.error || "The room could not be analyzed yet.") : "Add photos and run AI analysis for this room."}</div>`;
+                    : `<div class="ai-empty">${room.status === "error"
+                        ? escapeHtml(room.error || "The room could not be estimated yet.")
+                        : room.images.length > 0
+                            ? "Tap Estimate this room when you are ready."
+                            : "Add photos first. Start with one wide room photo, then add close-ups of important finishes."
+                    }</div>`;
 
                 return `
                     <article class="room-card">
@@ -2578,22 +2662,22 @@
                                 <h3 class="text-2xl mt-2">${escapeHtml(room.name)}</h3>
                                 <p class="text-slate-600 mt-2">${escapeHtml(room.tip)}</p>
                             </div>
-                            <span class="room-status" data-state="${escapeHtml(room.status)}">
-                                <i class="fas ${room.status === "processing" ? "fa-spinner fa-spin" : room.status === "done" ? "fa-circle-check" : room.status === "error" ? "fa-triangle-exclamation" : "fa-camera"}"></i>
-                                ${room.status === "processing" ? "Analyzing" : room.status === "done" ? "Estimated" : room.status === "error" ? "Needs retry" : "Ready"}
+                            <span class="room-status" data-state="${escapeHtml(displayStatus)}">
+                                <i class="fas ${statusIcon}"></i>
+                                ${statusText}
                             </span>
                         </div>
 
                         <div class="upload-zone">
-                            <p class="text-sm text-slate-600">Use multiple angles so the AI can see flooring, fixtures, cabinetry, and built-ins clearly.</p>
+                            <p class="text-sm text-slate-600">Take one wide photo, then close-ups of cabinets, counters, flooring, fixtures, and built-ins.</p>
                             <div class="upload-actions">
                                 <label class="upload-label">
                                     <i class="fas fa-upload"></i> Upload photos
-                                    <input type="file" accept="image/*,.heic,.heif,image/heic,image/heif,image/heic-sequence,image/heif-sequence" multiple data-action="upload" data-room-id="${escapeHtml(room.id)}" hidden>
+                                    <input type="file" accept="image/*,.heic,.heif,image/heic,image/heif,image/heic-sequence,image/heif-sequence" multiple data-action="upload" data-room-id="${escapeHtml(room.id)}" aria-label="Upload ${escapeHtml(room.name)} photos" hidden>
                                 </label>
                                 <label class="upload-label upload-label--camera">
                                     <i class="fas fa-camera"></i> Take photo
-                                    <input type="file" accept="image/*,.heic,.heif,image/heic,image/heif,image/heic-sequence,image/heif-sequence" capture="environment" data-action="upload" data-room-id="${escapeHtml(room.id)}" hidden>
+                                    <input type="file" accept="image/*,.heic,.heif,image/heic,image/heif,image/heic-sequence,image/heif-sequence" capture="environment" data-action="upload" data-room-id="${escapeHtml(room.id)}" aria-label="Take ${escapeHtml(room.name)} photo" hidden>
                                 </label>
                             </div>
                             ${room.images.length > 0 ? `<div class="thumb-grid">${thumbs}</div>` : ""}
@@ -2601,7 +2685,7 @@
 
                         <div class="room-tools">
                             <button type="button" class="pill-button pill-button--primary" data-action="analyze-room" data-room-id="${escapeHtml(room.id)}" ${room.images.length === 0 || room.status === "processing" ? "disabled" : ""}>
-                                <i class="fas fa-wand-magic-sparkles"></i>${room.components.length > 0 ? "Update AI estimate" : "Analyze room"}
+                                <i class="fas fa-wand-magic-sparkles"></i>${room.components.length > 0 ? "Update room estimate" : "Estimate this room"}
                             </button>
                             <button type="button" class="pill-button pill-button--ghost" data-action="clear-room" data-room-id="${escapeHtml(room.id)}">
                                 <i class="fas fa-trash-can"></i>Clear room

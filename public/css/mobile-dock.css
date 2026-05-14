@@ -5,11 +5,12 @@
 
 /* --- CSS Variables --- */
 :root {
-    --dock-navy: #0c1a2e;
-    --dock-blue: #2563eb;
-    --dock-gold: #f59e0b;
+    --dock-navy: #003f87;
+    --dock-navy-dark: #002659;
+    --dock-blue: #0076d3;
+    --dock-gold: #fbbf24;
     --dock-gold-light: #fbbf24;
-    --dock-green: #22c55e;
+    --dock-green: #047857;
     --dock-gray-100: #f1f5f9;
     --dock-gray-200: #e2e8f0;
     --dock-gray-400: #94a3b8;
@@ -65,18 +66,18 @@
 
 .dock-quote {
     flex: 2.5;
-    background: linear-gradient(135deg, var(--dock-gold) 0%, #e68a00 100%);
-    color: var(--dock-navy);
+    background: linear-gradient(135deg, var(--dock-blue) 0%, var(--dock-navy) 100%);
+    color: white;
     font-family: 'Outfit', sans-serif;
     font-weight: 800;
-    font-size: 14px;
-    letter-spacing: -0.01em;
-    box-shadow: 0 2px 12px rgba(245, 158, 11, 0.3);
+    font-size: 13px;
+    letter-spacing: 0;
+    box-shadow: 0 2px 12px rgba(0, 63, 135, 0.25);
 }
 
 .dock-menu {
     flex: 1;
-    background: var(--dock-navy);
+    background: var(--dock-navy-dark);
     color: white;
     cursor: pointer;
 }
