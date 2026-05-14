@@ -123,44 +123,17 @@
             box-shadow: 0 16px 40px rgba(15, 23, 42, 0.12);
         }
 
-        .navigation-menu {
-            position: fixed;
-            top: 0;
-            right: -100%;
-            width: 100%;
-            max-width: 360px;
-            height: 100vh;
-            background: white;
-            box-shadow: -8px 0 32px rgba(15, 23, 42, 0.18);
-            transition: right 0.25s ease;
-            z-index: 1000;
-            padding: 20px;
-            overflow-y: auto;
-        }
-
-        .navigation-menu.active {
-            right: 0;
-        }
-
-        .hamburger span {
-            display: block;
-            width: 25px;
-            height: 3px;
-            background: #334155;
-            margin: 4px 0;
+        .header-back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            min-height: 48px;
+            padding: 0.75rem 1rem;
             border-radius: 999px;
-        }
-
-        .menu-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(15, 23, 42, 0.5);
-            z-index: 999;
-        }
-
-        .menu-overlay.active {
-            display: block;
+            color: var(--navy);
+            background: var(--blue-soft);
+            font-weight: 800;
+            text-decoration: none;
         }
 
         main {
@@ -423,6 +396,14 @@
             font: inherit;
         }
 
+        button:disabled,
+        .pill-button:disabled {
+            cursor: not-allowed;
+            opacity: 0.56;
+            box-shadow: none;
+            filter: grayscale(0.2);
+        }
+
         .pill-button {
             display: inline-flex;
             align-items: center;
@@ -552,6 +533,46 @@
         .trust-line i {
             margin-top: 0.2rem;
             color: var(--success);
+        }
+
+        .ai-action-message {
+            display: none;
+            align-items: flex-start;
+            gap: 0.55rem;
+            margin-top: 1rem;
+            padding: 0.85rem 1rem;
+            border-radius: 18px;
+            font-size: 0.95rem;
+            line-height: 1.45;
+            font-weight: 700;
+        }
+
+        .ai-action-message.is-visible {
+            display: flex;
+        }
+
+        .ai-action-message[data-tone="info"] {
+            background: var(--blue-soft);
+            border: 1px solid rgba(0, 118, 211, 0.18);
+            color: var(--navy);
+        }
+
+        .ai-action-message[data-tone="success"] {
+            background: rgba(220, 252, 231, 0.96);
+            border: 1px solid rgba(4, 120, 87, 0.18);
+            color: var(--success);
+        }
+
+        .ai-action-message[data-tone="warning"] {
+            background: var(--gold-soft);
+            border: 1px solid rgba(251, 191, 36, 0.35);
+            color: #92400e;
+        }
+
+        .ai-action-message[data-tone="error"] {
+            background: rgba(254, 226, 226, 0.96);
+            border: 1px solid rgba(185, 28, 28, 0.18);
+            color: var(--danger);
         }
 
         .footer {
@@ -777,6 +798,73 @@
             border: 1px solid rgba(148, 163, 184, 0.18);
         }
 
+        .custom-room-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 1200;
+            display: none;
+            align-items: flex-end;
+            justify-content: center;
+            padding: 1rem;
+            background: rgba(15, 23, 42, 0.52);
+        }
+
+        .custom-room-modal.is-open {
+            display: flex;
+        }
+
+        .custom-room-card {
+            width: min(100%, 520px);
+            max-height: calc(100vh - 2rem);
+            overflow-y: auto;
+            border-radius: 28px;
+            background: white;
+            padding: 1.15rem;
+            box-shadow: 0 28px 80px rgba(15, 23, 42, 0.25);
+        }
+
+        .custom-room-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .custom-room-close {
+            width: 44px;
+            height: 44px;
+            border-radius: 999px;
+            background: #f1f5f9;
+            color: var(--ink);
+            flex: 0 0 auto;
+        }
+
+        .quick-room-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.65rem;
+            margin: 0.85rem 0 1rem;
+        }
+
+        .quick-room-chip {
+            min-height: 46px;
+            border-radius: 16px;
+            background: var(--blue-soft);
+            color: var(--navy);
+            border: 1px solid rgba(0, 118, 211, 0.18);
+            font-weight: 800;
+            padding: 0.65rem 0.75rem;
+            text-align: center;
+        }
+
+        .custom-room-help {
+            margin-top: 0.65rem;
+            color: var(--muted);
+            font-size: 0.95rem;
+            line-height: 1.45;
+        }
+
         @media (max-width: 980px) {
             .hero-grid,
             .calc-layout,
@@ -936,7 +1024,6 @@
                 gap: 0.75rem;
             }
 
-            .mobile-dock + .menu-overlay,
             .dock-spacer {
                 display: block;
             }
@@ -946,46 +1033,16 @@
 <body>
     <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[9999] focus:bg-blue-700 focus:text-white focus:px-4 focus:py-2 focus:rounded-lg focus:text-sm focus:font-semibold focus:shadow-lg">Skip to main content</a>
 
-    <div id="menu-overlay" class="menu-overlay"></div>
-
     <header id="main-header" class="f-header">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-20">
-                <div class="flex-shrink-0">
-                    <a href="https://www.billlayneinsurance.com/" class="text-2xl font-bold text-blue-800">Bill Layne Insurance</a>
-                    <p class="text-xs text-gray-600 hidden sm:block">Protecting NC For 20+ Years</p>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <div class="hidden md:flex items-center">
-                        <a href="tel:3368351993" class="text-gray-700 font-semibold hover:text-blue-600 transition-colors mr-4">
-                            <i class="fas fa-phone mr-2"></i>(336) 835-1993
-                        </a>
-                        <a href="https://www.billlayneinsurance.com/auto-quote.html" class="inline-block px-6 py-3 bg-blue-600 text-white rounded-full font-bold shadow-lg hover:bg-blue-700 transition-colors">Get Free Quote</a>
-                    </div>
-                    <button id="menu-toggle-btn" class="hidden md:block hamburger p-2" aria-label="Open menu">
-                        <span></span><span></span><span></span>
-                    </button>
-                </div>
+            <div class="flex justify-start items-center h-20">
+                <a href="https://www.billlayneinsurance.com/" class="header-back-link">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Back to Bill Layne Insurance</span>
+                </a>
             </div>
         </div>
     </header>
-
-    <div id="navigation-menu" class="navigation-menu">
-        <div class="flex justify-between items-center mb-8">
-            <h3 class="text-xl lg:text-2xl font-bold text-gray-800">Navigation</h3>
-            <button id="close-menu" class="text-gray-500 hover:text-gray-700 p-2" aria-label="Close menu">
-                <i class="fas fa-times text-xl"></i>
-            </button>
-        </div>
-        <nav class="space-y-4">
-            <a href="https://www.billlayneinsurance.com/" class="block py-3 px-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 font-medium border-b border-gray-200 rounded transition-all"><i class="fas fa-home mr-3 w-5"></i>Home</a>
-            <a href="https://www.billlayneinsurance.com/home-insurance/" class="block py-3 px-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 font-medium border-b border-gray-200 rounded transition-all"><i class="fas fa-house mr-3 w-5"></i>Home Insurance</a>
-            <a href="https://www.billlayneinsurance.com/renters-insurance-surry-county-nc.html" class="block py-3 px-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 font-medium border-b border-gray-200 rounded transition-all"><i class="fas fa-key mr-3 w-5"></i>Renters Insurance</a>
-            <a href="https://www.billlayneinsurance.com/umbrella-policy-calculator.html" class="block py-3 px-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 font-medium border-b border-gray-200 rounded transition-all"><i class="fas fa-shield-halved mr-3 w-5"></i>Umbrella Calculator</a>
-            <a href="https://www.billlayneinsurance.com/service-center.html" class="block py-3 px-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 font-medium border-b border-gray-200 rounded transition-all"><i class="fas fa-concierge-bell mr-3 w-5"></i>Service Center</a>
-            <a href="https://www.billlayneinsurance.com/contact-us.html" class="block py-3 px-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 font-medium border-b border-gray-200 rounded transition-all"><i class="fas fa-envelope mr-3 w-5"></i>Contact Us</a>
-        </nav>
-    </div>
 
     <main id="main-content">
         <section class="hero-shell">
@@ -1253,8 +1310,9 @@
                             </p>
                             <div class="calc-actions">
                                 <button type="button" id="addCustomRoomBtn" class="pill-button pill-button--ghost"><i class="fas fa-plus"></i>Add custom room</button>
-                                <button type="button" id="analyzeAllRoomsBtn" class="pill-button pill-button--primary"><i class="fas fa-camera-retro"></i>Analyze all ready rooms</button>
+                                <button type="button" id="analyzeAllRoomsBtn" class="pill-button pill-button--primary"><i class="fas fa-camera-retro"></i><span id="analyzeAllRoomsLabel">Analyze ready rooms</span></button>
                             </div>
+                            <div id="aiActionMessage" class="ai-action-message" data-tone="info" role="status" aria-live="polite"></div>
                         </section>
 
                         <aside class="ai-panel">
@@ -1299,26 +1357,40 @@
         <a href="#calculator" class="dock-btn dock-quote">
             <i class="fas fa-calculator"></i> Calculate Coverage
         </a>
-        <button class="dock-btn dock-menu" onclick="toggleMobileDockMenu()">
-            <i class="fas fa-bars"></i> Menu
-        </button>
     </div>
 
-    <div class="menu-overlay" id="mobileDockOverlay" onclick="toggleMobileDockMenu()"></div>
+    <div class="custom-room-modal" id="customRoomModal" aria-hidden="true">
+        <div class="custom-room-card" role="dialog" aria-modal="true" aria-labelledby="customRoomTitle">
+            <div class="custom-room-header">
+                <div>
+                    <p class="section-label">Add a room</p>
+                    <h2 id="customRoomTitle" class="text-3xl mt-1">What room do you want to scan?</h2>
+                    <p class="custom-room-help">Pick a common room below or type your own. We will add it to the photo scan list.</p>
+                </div>
+                <button type="button" class="custom-room-close" id="closeCustomRoomBtn" aria-label="Close add room dialog"><i class="fas fa-times"></i></button>
+            </div>
 
-    <div class="menu-panel" id="mobileDockPanel">
-        <div class="menu-handle"></div>
-        <div class="menu-panel-header">
-            <span class="menu-panel-title">Bill Layne Insurance</span>
-            <button class="menu-close" onclick="toggleMobileDockMenu()"><i class="fas fa-times"></i></button>
+            <div class="quick-room-grid" aria-label="Common room choices">
+                <button type="button" class="quick-room-chip" data-room-name="Office">Office</button>
+                <button type="button" class="quick-room-chip" data-room-name="Den">Den</button>
+                <button type="button" class="quick-room-chip" data-room-name="Sunroom">Sunroom</button>
+                <button type="button" class="quick-room-chip" data-room-name="Bonus Room">Bonus Room</button>
+                <button type="button" class="quick-room-chip" data-room-name="Second Bedroom">Second Bedroom</button>
+                <button type="button" class="quick-room-chip" data-room-name="Storage Room">Storage Room</button>
+            </div>
+
+            <form id="customRoomForm">
+                <div class="field">
+                    <label for="customRoomName">Room name</label>
+                    <input id="customRoomName" name="customRoomName" type="text" autocomplete="off" placeholder="Example: Office, Den, Sunroom">
+                    <div class="field-hint">After adding it, take one wide photo and close-ups of attached finishes.</div>
+                </div>
+                <div class="calc-actions">
+                    <button type="submit" class="pill-button pill-button--primary"><i class="fas fa-plus"></i>Add this room</button>
+                    <button type="button" id="cancelCustomRoomBtn" class="pill-button pill-button--ghost">Cancel</button>
+                </div>
+            </form>
         </div>
-        <ul class="menu-links">
-            <li><a href="https://www.billlayneinsurance.com"><span class="menu-icon blue"><i class="fas fa-home"></i></span> Home <i class="fas fa-chevron-right menu-arrow"></i></a></li>
-            <li><a href="https://www.billlayneinsurance.com/home-insurance/"><span class="menu-icon green"><i class="fas fa-house"></i></span> Home Insurance <i class="fas fa-chevron-right menu-arrow"></i></a></li>
-            <li><a href="https://www.billlayneinsurance.com/umbrella-policy-calculator.html"><span class="menu-icon blue"><i class="fas fa-shield-halved"></i></span> Umbrella Calculator <i class="fas fa-chevron-right menu-arrow"></i></a></li>
-            <li><a href="https://www.billlayneinsurance.com/service-center.html"><span class="menu-icon green"><i class="fas fa-concierge-bell"></i></span> Service Center <i class="fas fa-chevron-right menu-arrow"></i></a></li>
-            <li><a href="https://www.billlayneinsurance.com/contact-us.html"><span class="menu-icon blue"><i class="fas fa-envelope"></i></span> Contact Us <i class="fas fa-chevron-right menu-arrow"></i></a></li>
-        </ul>
     </div>
     <script>
         const currency = new Intl.NumberFormat("en-US", {
@@ -1455,32 +1527,6 @@
             calculateCoverage();
         });
         document.addEventListener("DOMContentLoaded", function() {
-            const menuToggleBtn = document.getElementById("menu-toggle-btn");
-            const navigationMenu = document.getElementById("navigation-menu");
-            const closeMenuBtn = document.getElementById("close-menu");
-            const menuOverlay = document.getElementById("menu-overlay");
-
-            if (menuToggleBtn) {
-                menuToggleBtn.addEventListener("click", function() {
-                    navigationMenu.classList.toggle("active");
-                    menuOverlay.classList.toggle("active");
-                });
-            }
-
-            if (closeMenuBtn) {
-                closeMenuBtn.addEventListener("click", function() {
-                    navigationMenu.classList.remove("active");
-                    menuOverlay.classList.remove("active");
-                });
-            }
-
-            if (menuOverlay) {
-                menuOverlay.addEventListener("click", function() {
-                    navigationMenu.classList.remove("active");
-                    menuOverlay.classList.remove("active");
-                });
-            }
-
             window.addEventListener("scroll", function() {
                 const header = document.getElementById("main-header");
                 if (window.scrollY > 50) {
@@ -1523,6 +1569,7 @@
         };
 
         let heic2anyPromise = null;
+        let aiMessageTimer = null;
 
         function formatMoney(value) {
             return aiCurrency.format(Math.max(0, Math.round(value || 0)));
@@ -1545,6 +1592,99 @@
                 .replace(/>/g, "&gt;")
                 .replace(/"/g, "&quot;")
                 .replace(/'/g, "&#39;");
+        }
+
+        function getReadyRooms() {
+            return roomState.rooms.filter((room) => room.images.length > 0 && room.status !== "processing");
+        }
+
+        function setAiActionMessage(message, tone = "info", autoHide = false) {
+            const messageBox = document.getElementById("aiActionMessage");
+            if (!messageBox) return;
+            window.clearTimeout(aiMessageTimer);
+            const icons = {
+                info: "fa-circle-info",
+                success: "fa-circle-check",
+                warning: "fa-triangle-exclamation",
+                error: "fa-circle-exclamation"
+            };
+            messageBox.dataset.tone = tone;
+            messageBox.innerHTML = `<i class="fas ${icons[tone] || icons.info}"></i><span>${escapeHtml(message)}</span>`;
+            messageBox.classList.add("is-visible");
+            if (autoHide) {
+                aiMessageTimer = window.setTimeout(() => {
+                    messageBox.classList.remove("is-visible");
+                }, 6000);
+            }
+        }
+
+        function updateAnalyzeAllButton() {
+            const button = document.getElementById("analyzeAllRoomsBtn");
+            const label = document.getElementById("analyzeAllRoomsLabel");
+            if (!button || !label) return;
+            const readyCount = getReadyRooms().length;
+            const processingCount = roomState.rooms.filter((room) => room.status === "processing").length;
+            label.textContent = readyCount > 0
+                ? `Analyze ready rooms (${readyCount})`
+                : "Analyze ready rooms";
+            button.setAttribute("aria-label", readyCount > 0
+                ? `Analyze ${readyCount} room${readyCount === 1 ? "" : "s"} with photos`
+                : "Add photos before analyzing rooms");
+            button.disabled = processingCount > 0;
+        }
+
+        function scrollToRoom(roomId) {
+            const roomCard = Array.from(document.querySelectorAll("[data-room-id]"))
+                .find((card) => card.dataset.roomId === roomId);
+            roomCard?.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+
+        function createCustomRoom(name) {
+            const trimmed = name.trim().replace(/\s+/g, " ");
+            if (!trimmed) {
+                setAiActionMessage("Enter a room name or tap one of the room choices.", "warning");
+                return;
+            }
+            const existingRoom = roomState.rooms.find((room) => room.name.toLowerCase() === trimmed.toLowerCase());
+            if (existingRoom) {
+                closeCustomRoomDialog();
+                setAiActionMessage(`${existingRoom.name} is already in your room list. Add photos there when you are ready.`, "info", true);
+                scrollToRoom(existingRoom.id);
+                return;
+            }
+            const id = `custom-${trimmed.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${Date.now()}`;
+            roomState.rooms.push({
+                id,
+                name: trimmed,
+                tip: "Take one wide photo, then close-ups of any attached finishes, fixtures, flooring, cabinets, or built-ins.",
+                images: [],
+                components: [],
+                total: 0,
+                summary: "",
+                status: "idle",
+                error: ""
+            });
+            closeCustomRoomDialog();
+            renderRooms();
+            setAiActionMessage(`${trimmed} was added. Add photos to include it in the AI room scan.`, "success", true);
+            window.setTimeout(() => scrollToRoom(id), 80);
+        }
+
+        function openCustomRoomDialog() {
+            const modal = document.getElementById("customRoomModal");
+            const input = document.getElementById("customRoomName");
+            if (!modal || !input) return;
+            modal.classList.add("is-open");
+            modal.setAttribute("aria-hidden", "false");
+            input.value = "";
+            window.setTimeout(() => input.focus(), 80);
+        }
+
+        function closeCustomRoomDialog() {
+            const modal = document.getElementById("customRoomModal");
+            if (!modal) return;
+            modal.classList.remove("is-open");
+            modal.setAttribute("aria-hidden", "true");
         }
 
         function isHeicLikeFile(file) {
@@ -1635,9 +1775,14 @@
                 body: JSON.stringify({ images, roomName })
             });
 
-            const payload = await response.json();
+            let payload = {};
+            try {
+                payload = await response.json();
+            } catch (error) {
+                payload = {};
+            }
             if (!response.ok) {
-                throw new Error(payload.detail || payload.error || "AI room analysis failed.");
+                throw new Error(payload.detail || payload.error || `AI room scan could not start. Please try again or analyze this room by itself.`);
             }
             const components = Array.isArray(payload.components) ? payload.components : [];
 
@@ -2655,7 +2800,7 @@
                     }</div>`;
 
                 return `
-                    <article class="room-card">
+                    <article class="room-card" data-room-id="${escapeHtml(room.id)}">
                         <div class="room-card__top">
                             <div>
                                 <p class="section-label">${escapeHtml(room.name)}</p>
@@ -2714,6 +2859,7 @@
                     room.status = room.status === "done" ? "idle" : room.status;
                     room.error = "";
                     renderRooms();
+                    setAiActionMessage(`${room.name} has ${room.images.length} photo${room.images.length === 1 ? "" : "s"} ready. Tap Analyze ready rooms or estimate this room.`, "success", true);
                 });
             });
 
@@ -2731,6 +2877,7 @@
                     }
                     renderRooms();
                     updateAiSummary();
+                    updateAnalyzeAllButton();
                 });
             });
 
@@ -2746,6 +2893,7 @@
                     room.error = "";
                     renderRooms();
                     updateAiSummary();
+                    setAiActionMessage(`${room.name} was cleared. Add new photos when you are ready.`, "info", true);
                 });
             });
 
@@ -2768,13 +2916,28 @@
                     }
                     renderRooms();
                     updateAiSummary();
+                    updateAnalyzeAllButton();
                 });
             });
+
+            updateAnalyzeAllButton();
         }
 
         async function analyzeAllReadyRooms() {
-            for (const room of roomState.rooms) {
-                if (room.images.length === 0 || room.status === "processing") continue;
+            const readyRooms = getReadyRooms();
+            const analyzeButton = document.getElementById("analyzeAllRoomsBtn");
+            if (readyRooms.length === 0) {
+                setAiActionMessage("Add at least one photo to a room first. Then this button will scan every room with photos.", "warning");
+                document.getElementById("roomEstimatorGrid")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                return;
+            }
+
+            if (analyzeButton) {
+                analyzeButton.disabled = true;
+            }
+            setAiActionMessage(`Starting AI scan for ${readyRooms.length} room${readyRooms.length === 1 ? "" : "s"} with photos.`, "info");
+
+            for (const room of readyRooms) {
                 room.status = "processing";
                 room.error = "";
                 renderRooms();
@@ -2792,25 +2955,38 @@
             }
             renderRooms();
             updateAiSummary();
+            if (analyzeButton) {
+                analyzeButton.disabled = false;
+            }
+            updateAnalyzeAllButton();
+
+            const failedRooms = readyRooms.filter((room) => room.status === "error");
+            if (failedRooms.length > 0) {
+                setAiActionMessage(`${failedRooms.length} room${failedRooms.length === 1 ? "" : "s"} could not be scanned. Open that room card and try Estimate this room again.`, "error");
+            } else {
+                setAiActionMessage(`Finished scanning ${readyRooms.length} room${readyRooms.length === 1 ? "" : "s"}. The photo estimate is now included above.`, "success", true);
+            }
         }
 
-        document.getElementById("addCustomRoomBtn")?.addEventListener("click", () => {
-            const name = window.prompt("Room name");
-            if (!name) return;
-            const trimmed = name.trim();
-            if (!trimmed) return;
-            roomState.rooms.push({
-                id: `custom-${trimmed.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${Date.now()}`,
-                name: trimmed,
-                tip: "Capture the room from multiple angles and include any attached finishes, fixtures, and built-ins.",
-                images: [],
-                components: [],
-                total: 0,
-                summary: "",
-                status: "idle",
-                error: ""
-            });
-            renderRooms();
+        document.getElementById("addCustomRoomBtn")?.addEventListener("click", openCustomRoomDialog);
+        document.getElementById("closeCustomRoomBtn")?.addEventListener("click", closeCustomRoomDialog);
+        document.getElementById("cancelCustomRoomBtn")?.addEventListener("click", closeCustomRoomDialog);
+        document.getElementById("customRoomModal")?.addEventListener("click", (event) => {
+            if (event.target.id === "customRoomModal") {
+                closeCustomRoomDialog();
+            }
+        });
+        document.querySelectorAll("[data-room-name]").forEach((button) => {
+            button.addEventListener("click", () => createCustomRoom(button.dataset.roomName || ""));
+        });
+        document.getElementById("customRoomForm")?.addEventListener("submit", (event) => {
+            event.preventDefault();
+            createCustomRoom(document.getElementById("customRoomName")?.value || "");
+        });
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "Escape") {
+                closeCustomRoomDialog();
+            }
         });
 
         document.getElementById("analyzeAllRoomsBtn")?.addEventListener("click", analyzeAllReadyRooms);
@@ -2819,6 +2995,5 @@
         renderRooms();
         updateAiSummary();
     </script>
-    <script src="js/mobile-dock.js"></script>
 </body>
 </html>

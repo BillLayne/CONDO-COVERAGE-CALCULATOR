@@ -65,7 +65,7 @@
 .dock-call i { color: white; }
 
 .dock-quote {
-    flex: 2.5;
+    flex: 1.7;
     background: linear-gradient(135deg, var(--dock-blue) 0%, var(--dock-navy) 100%);
     color: white;
     font-family: 'Outfit', sans-serif;
@@ -75,127 +75,8 @@
     box-shadow: 0 2px 12px rgba(0, 63, 135, 0.25);
 }
 
-.dock-menu {
-    flex: 1;
-    background: var(--dock-navy-dark);
-    color: white;
-    cursor: pointer;
-}
-
 /* Dock Spacer */
 .dock-spacer { height: 72px; }
-
-/* =============================
-   MENU OVERLAY
-============================= */
-.menu-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.5);
-    z-index: 90;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s, visibility 0.3s;
-}
-.menu-overlay.open {
-    opacity: 1;
-    visibility: visible;
-}
-
-/* =============================
-   SLIDE-UP MENU PANEL
-============================= */
-.menu-panel {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    max-height: 85vh;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    z-index: 95;
-    background: white;
-    border-radius: 24px 24px 0 0;
-    padding: 12px 20px 20px;
-    padding-bottom: max(20px, calc(env(safe-area-inset-bottom) + 12px));
-    transform: translateY(100%);
-    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-    box-shadow: 0 -10px 40px rgba(0,0,0,0.15);
-}
-.menu-panel.open {
-    transform: translateY(0);
-}
-.menu-handle {
-    width: 36px;
-    height: 4px;
-    background: var(--dock-gray-200);
-    border-radius: 4px;
-    margin: 0 auto 16px;
-}
-.menu-panel-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 16px;
-}
-.menu-panel-title {
-    font-family: 'Outfit', sans-serif;
-    font-weight: 800;
-    font-size: 18px;
-    color: var(--dock-gray-900);
-}
-.menu-close {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: var(--dock-gray-100);
-    border: none;
-    color: var(--dock-gray-600);
-    font-size: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-}
-.menu-links {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-.menu-links li { border-bottom: 1px solid var(--dock-gray-100); }
-.menu-links li:last-child { border-bottom: none; }
-.menu-links a {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 14px 4px;
-    text-decoration: none;
-    color: var(--dock-gray-900);
-    font-weight: 600;
-    font-size: 15px;
-    transition: color 0.2s;
-}
-.menu-links a:active { color: var(--dock-blue); }
-.menu-links .menu-icon {
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    flex-shrink: 0;
-}
-.menu-icon.blue { background: #eff6ff; color: var(--dock-blue); }
-.menu-icon.red { background: #fef2f2; color: #ef4444; }
-.menu-icon.green { background: #f0fdf4; color: #16a34a; }
-.menu-icon.purple { background: #faf5ff; color: #9333ea; }
-.menu-icon.amber { background: #fffbeb; color: var(--dock-gold); }
-.menu-links .menu-arrow {
-    margin-left: auto;
-    color: var(--dock-gray-400);
-    font-size: 12px;
-}
 
 /* =============================
    MOBILE HERO (index.html only)
@@ -600,8 +481,6 @@
 @media (min-width: 768px) {
     .mobile-dock { display: none !important; }
     .dock-spacer { display: none !important; }
-    .menu-overlay { display: none !important; }
-    .menu-panel { display: none !important; }
     .mobile-hero { display: none !important; }
     .mobile-hero-carrier-strip { display: none !important; }
     .mobile-hero-proof-bar { display: none !important; }
