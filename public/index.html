@@ -93,15 +93,26 @@
 
         html {
             scroll-behavior: smooth;
+            max-width: 100%;
+            overflow-x: hidden;
         }
 
         body {
             margin: 0;
             font-family: "DM Sans", system-ui, sans-serif;
             color: var(--ink);
+            max-width: 100%;
+            overflow-x: hidden;
             background:
                 radial-gradient(circle at top left, rgba(0, 118, 211, 0.18), transparent 32%),
                 linear-gradient(180deg, #eef5ff 0%, #f7fafc 38%, #eef2f7 100%);
+        }
+
+        main,
+        .hero-shell,
+        .section-shell,
+        .f-header {
+            max-width: 100%;
         }
 
         h1, h2, h3, h4 {
@@ -1037,6 +1048,37 @@
             color: var(--danger);
         }
 
+        #analyzeAllRoomsBtn[data-ready="false"] {
+            background: linear-gradient(135deg, var(--gold), #f59e0b);
+            color: #0f172a;
+            box-shadow: 0 12px 24px rgba(245, 158, 11, 0.2);
+        }
+
+        .scan-empty-note {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.55rem;
+            margin-top: 0.9rem;
+            padding: 0.85rem 1rem;
+            border-radius: 18px;
+            background: rgba(239, 246, 255, 0.96);
+            border: 1px solid rgba(0, 118, 211, 0.16);
+            color: var(--navy);
+            font-size: 0.95rem;
+            line-height: 1.45;
+            font-weight: 700;
+        }
+
+        .scan-empty-note[data-state="ready"] {
+            background: rgba(220, 252, 231, 0.96);
+            border-color: rgba(4, 120, 87, 0.18);
+            color: var(--success);
+        }
+
+        .scan-empty-note i {
+            margin-top: 0.2rem;
+        }
+
         .footer {
             padding: 2rem 1rem 7rem;
             text-align: center;
@@ -1440,7 +1482,7 @@
             }
 
             .hero-shell {
-                padding-top: 5.3rem;
+                padding-top: 5.05rem;
             }
 
             .hero-copy,
@@ -1463,18 +1505,60 @@
             }
 
             .hero-copy {
-                padding: 1.2rem 1.05rem 1.05rem;
+                min-width: 0;
+                padding: 1rem 0.9rem 0.95rem;
             }
 
             .hero-title {
                 max-width: none;
-                font-size: clamp(2.05rem, 10vw, 2.8rem);
-                line-height: 1;
+                font-size: clamp(1.72rem, 7.8vw, 2.08rem);
+                line-height: 1.06;
+                letter-spacing: -0.02em;
+                overflow-wrap: normal;
+            }
+
+            .hero-grid,
+            .hero-copy,
+            .hero-mobile-visual,
+            .hero-process-card,
+            .calc-card,
+            .results-card,
+            .checklist-card,
+            .ai-panel,
+            .room-card {
+                max-width: 100%;
+            }
+
+            .hero-grid,
+            .hero-process-card,
+            .calc-card,
+            .results-card,
+            .checklist-card,
+            .ai-panel,
+            .room-card {
+                width: min(100%, calc(100vw - 2rem));
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .text-4xl,
+            .text-3xl,
+            .text-2xl,
+            .text-slate-600,
+            .text-slate-700 {
+                overflow-wrap: break-word;
             }
 
             .hero-subtitle {
                 font-size: 1rem;
                 line-height: 1.45;
+                max-width: 30ch;
+            }
+
+            .eyebrow {
+                max-width: 100%;
+                white-space: normal;
+                line-height: 1.25;
             }
 
             .hero-visual-points {
@@ -1500,20 +1584,28 @@
                 width: 100%;
                 height: auto;
                 aspect-ratio: 16 / 10;
-                object-fit: cover;
-                object-position: 62% center;
+                object-fit: contain;
+                object-position: center;
             }
 
             .hero-process-card {
-                width: calc(100% - 2rem);
-                margin-top: 1rem;
+                width: 100%;
+                margin-top: 0.8rem;
                 border-radius: 24px;
+            }
+
+            .info-strip {
+                display: none;
             }
 
             .hero-process-step {
                 grid-template-columns: 54px 1fr;
                 min-height: auto;
                 padding: 1rem;
+            }
+
+            .hero-process-step span {
+                max-width: 25ch;
             }
 
             .hero-process-icon {
@@ -1629,6 +1721,19 @@
                 flex-direction: column;
                 gap: 0.65rem;
             }
+
+            .mobile-dock {
+                box-sizing: border-box;
+                max-width: 100vw;
+            }
+
+            .dock-btn {
+                min-width: 0;
+            }
+
+            .dock-quote {
+                flex: 1.35;
+            }
         }
 
         @media (max-width: 540px) {
@@ -1641,8 +1746,8 @@
             }
 
             .hero-title {
-                font-size: clamp(1.95rem, 9.6vw, 2.5rem);
-                line-height: 0.98;
+                font-size: clamp(1.7rem, 7.5vw, 2rem);
+                line-height: 1.06;
             }
 
             .signal {
@@ -1692,7 +1797,7 @@
                             <img src="assets/condo-hero-ai-camera.webp" alt="Phone camera scanning a condo room while AI detects cabinets, flooring, fixtures, and finishes" width="1072" height="658" decoding="async" fetchpriority="high">
                         </figure>
                         <p class="hero-subtitle">
-                            Use your phone to capture kitchens, baths, flooring, cabinets, and finishes. Our AI helps estimate the interior coverage your condo may need.
+                            Take room photos. We help estimate cabinets, flooring, fixtures, and finishes.
                         </p>
                         <div class="hero-actions">
                             <a class="cta-btn cta-btn--primary" href="#ai-room-scan"><i class="fas fa-camera"></i>Start with photos</a>
@@ -1913,15 +2018,19 @@
                                 <img src="assets/condo-room-scan.webp" alt="Homeowner using a phone camera to photograph attached condo kitchen finishes for documentation" width="1100" height="825" loading="lazy" decoding="async">
                             </figure>
                             <p class="text-slate-600 mt-3">
-                                Take clear room photos. The AI looks for attached items like cabinets, flooring, lights, fixtures, appliances, and built-ins. It ignores furniture.
+                                Start with one wide room photo, then add close-ups of attached finishes. The AI ignores furniture and focuses on what may belong in condo interior coverage.
                             </p>
                             <div class="trust-line"><i class="fas fa-lock"></i><span>Your photos stay private and are used only to estimate attached condo features.</span></div>
                             <div class="calc-actions">
                                 <button type="button" id="addCustomRoomBtn" class="pill-button pill-button--ghost"><i class="fas fa-plus"></i>Add custom room</button>
-                                <button type="button" id="analyzeAllRoomsBtn" class="pill-button pill-button--primary"><i class="fas fa-camera-retro"></i><span id="analyzeAllRoomsLabel">Analyze ready rooms</span></button>
+                                <button type="button" id="analyzeAllRoomsBtn" class="pill-button pill-button--primary" data-ready="false"><i class="fas fa-camera-retro"></i><span id="analyzeAllRoomsLabel">Add photos first</span></button>
                                 <a class="pill-button pill-button--ghost" href="#size-check"><i class="fas fa-ruler-combined"></i>Add square footage</a>
                             </div>
                             <div id="aiActionMessage" class="ai-action-message" data-tone="info" role="status" aria-live="polite"></div>
+                            <div id="scanEmptyState" class="scan-empty-note" data-state="empty" role="status" aria-live="polite">
+                                <i class="fas fa-circle-info"></i>
+                                <span>Start with a room card below. Add one wide photo, then this button will scan every room that has photos.</span>
+                            </div>
                         </section>
 
                         <aside class="ai-panel">
@@ -1964,7 +2073,7 @@
             <i class="fas fa-phone-alt"></i> Call
         </a>
         <a href="#ai-room-scan" class="dock-btn dock-quote">
-            <i class="fas fa-camera"></i> Start Photo Scan
+            <i class="fas fa-camera"></i> Scan Photos
         </a>
     </div>
 
@@ -2283,19 +2392,39 @@
             }
         }
 
+        function updateScanEmptyState(readyCount, processingCount) {
+            const stateBox = document.getElementById("scanEmptyState");
+            if (!stateBox) return;
+            const roomWord = readyCount === 1 ? "room" : "rooms";
+            if (processingCount > 0) {
+                stateBox.dataset.state = "ready";
+                stateBox.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>AI is scanning your ready room photos now. You can review each room when it finishes.</span>';
+                return;
+            }
+            if (readyCount > 0) {
+                stateBox.dataset.state = "ready";
+                stateBox.innerHTML = `<i class="fas fa-circle-check"></i><span>${readyCount} ${roomWord} ready. Tap Analyze ready rooms to build the condo interior estimate.</span>`;
+                return;
+            }
+            stateBox.dataset.state = "empty";
+            stateBox.innerHTML = '<i class="fas fa-circle-info"></i><span>Start with a room card below. Add one wide photo, then this button will scan every room that has photos.</span>';
+        }
+
         function updateAnalyzeAllButton() {
             const button = document.getElementById("analyzeAllRoomsBtn");
             const label = document.getElementById("analyzeAllRoomsLabel");
             if (!button || !label) return;
             const readyCount = getReadyRooms().length;
             const processingCount = roomState.rooms.filter((room) => room.status === "processing").length;
+            button.dataset.ready = readyCount > 0 ? "true" : "false";
             label.textContent = readyCount > 0
                 ? `Analyze ready rooms (${readyCount})`
-                : "Analyze ready rooms";
+                : "Add photos first";
             button.setAttribute("aria-label", readyCount > 0
                 ? `Analyze ${readyCount} room${readyCount === 1 ? "" : "s"} with photos`
                 : "Add photos before analyzing rooms");
             button.disabled = processingCount > 0;
+            updateScanEmptyState(readyCount, processingCount);
         }
 
         function scrollToRoom(roomId) {
@@ -2507,7 +2636,10 @@
                 aiSubtotal: document.getElementById("aiRoomSubtotal")?.textContent?.trim() || "$0",
                 aiBuffered: document.getElementById("aiRoomBuffered")?.textContent?.trim() || "$0",
                 aiRoomsAnalyzed: document.getElementById("aiRoomsAnalyzed")?.textContent?.trim() || "0",
-                estimateIncludes: "Includes attached condo features, typical replacement labor, debris cleanup, contractor overhead, price-change cushion, and association policy gap allowance. It is an estimate, not a guaranteed claim payment.",
+                preparedBy: "Bill Layne Insurance",
+                coverageLabel: "Suggested condo interior coverage",
+                estimateIncludes: "Includes attached condo features, typical replacement labor, debris cleanup, contractor overhead, price-change cushion, and association policy gap allowance.",
+                reviewDisclaimer: "AI estimate for planning only. Review with your agent and your condo association master policy before changing coverage.",
                 hasAiRoomAnalysis: analyzedRooms.length > 0,
                 assumptions: summarizeSelectedOptions(),
                 breakdownRows: getBreakdownRows(),
@@ -2900,10 +3032,10 @@
                 <div>
                     <p class="eyebrow">Bill Layne Insurance</p>
                     <h1>Condo Interior Coverage Report</h1>
-                    <p class="subhead">Prepared ${escapeHtml(report.generatedAt)} for customer review</p>
+                    <p class="subhead">Prepared by ${escapeHtml(report.preparedBy)} on ${escapeHtml(report.generatedAt)}</p>
                 </div>
                 <div class="header-total">
-                    <span>Suggested Coverage A</span>
+                    <span>${escapeHtml(report.coverageLabel)}</span>
                     <strong>${escapeHtml(report.recommendedCoverage)}</strong>
                 </div>
             </header>
@@ -2935,6 +3067,7 @@
                         </div>
                     </div>
                     <p class="footer-note">${escapeHtml(report.estimateIncludes)}</p>
+                    <p class="footer-note">${escapeHtml(report.reviewDisclaimer)}</p>
                 </div>
 
                 <div class="report-block">
@@ -2987,7 +3120,7 @@
             ` : ""}
 
             <p class="footer-note">
-                This estimate is intended as a customer-friendly starting point for condo interior coverage. Room estimates are based on visible attached features such as cabinets, flooring, trim, lighting, vanities, fixtures, and built-ins. Final insurance decisions should also consider condo bylaws, association master policy terms, and any upgrades not visible in the uploaded photos.
+                This estimate is intended as a customer-friendly starting point for condo interior coverage. Room estimates are based on visible attached features such as cabinets, flooring, trim, lighting, vanities, fixtures, and built-ins. Final insurance decisions should also consider condo bylaws, association master policy terms, association deductibles, and any upgrades not visible in the uploaded photos.
             </p>
         </div>
     </section>
@@ -3164,14 +3297,15 @@
                 doc.setFont("helvetica", "bold");
                 doc.setFontSize(11);
                 doc.setTextColor(16, 37, 66);
-                doc.text("Recommended condo interior coverage", 0.88, y + 0.28);
+                doc.text(report.coverageLabel, 0.88, y + 0.28);
                 doc.setFontSize(24);
                 doc.text(report.recommendedCoverage, 0.88, y + 0.72);
                 doc.setFont("helvetica", "normal");
                 doc.setFontSize(9.5);
                 doc.setTextColor(71, 85, 105);
                 doc.text(report.coverageRange, 4.72, y + 0.4);
-                doc.text(`Generated ${report.generatedAt}`, 4.72, y + 0.64);
+                doc.text(`Prepared by ${report.preparedBy}`, 4.72, y + 0.64);
+                doc.text(report.generatedAt, 4.72, y + 0.86);
                 y += 1.42;
 
                 y = addSectionTitle(doc, y, "Coverage summary", report.narrative);
@@ -3201,6 +3335,7 @@
                         ["Interior rebuild estimate", report.rebuildEstimate],
                         ["Buffer amount", report.bufferAmount],
                         ["Estimate includes", report.estimateIncludes],
+                        ["Important note", report.reviewDisclaimer],
                         ["AI room scan subtotal", report.aiSubtotal],
                         ["Buffered AI estimate", report.aiBuffered],
                         ["Photo-based room scan", report.photoEstimate],
@@ -3639,7 +3774,7 @@
             const readyRooms = getReadyRooms();
             const analyzeButton = document.getElementById("analyzeAllRoomsBtn");
             if (readyRooms.length === 0) {
-                setAiActionMessage("Add at least one photo to a room first. Then this button will scan every room with photos.", "warning");
+                setAiActionMessage("Add photos first. Start with one room card below, then this button will scan every room that has photos.", "warning");
                 document.getElementById("roomEstimatorGrid")?.scrollIntoView({ behavior: "smooth", block: "start" });
                 return;
             }
